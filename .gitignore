@@ -38,3 +38,8 @@ report_source/*.synctex.gz
 !/results/part_a/.gitkeep
 /report_source/part_a.md
 /tests/*.py
+
+# Part C: experimental outputs and report draft
+/results/part_c/*
+!/results/part_c/.gitkeep
+/report_source/part_c.md

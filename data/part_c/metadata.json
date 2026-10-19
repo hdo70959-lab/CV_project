@@ -1,0 +1,42 @@
+{
+  "dataset": "Part C four-image pagoda stitching sequence",
+  "scene": "Chua Minh Thanh interior architectural sequence.",
+  "images": [
+    {
+      "filename": "pagoda_01.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "7e42d2a32835603c1fee6ef571c998b60d30852040c352870a7c13f648bb0937",
+      "role": "Image 1 in stitching order; image 3 is the common coordinate reference."
+    },
+    {
+      "filename": "pagoda_02.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "2de0a8ff6224e4014aa16412aa8a5a9b5968dc729f6c833c693ba4c7d2a77b40",
+      "role": "Image 2 in stitching order; image 3 is the common coordinate reference."
+    },
+    {
+      "filename": "pagoda_03.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "511d2ff81b0c39a6fcccf681312ee8a9ff1f550942d8c6ecc6af102707c25435",
+      "role": "Image 3 in stitching order; image 3 is the common coordinate reference."
+    },
+    {
+      "filename": "pagoda_04.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "03d99700a481b407c319ad29330d7c098b902a6f80bf1fa4df886b591e9323f7",
+      "role": "Image 4 in stitching order; image 3 is the common coordinate reference."
+    }
+  ]
+}
