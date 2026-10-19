@@ -29,3 +29,12 @@ report_source/*.toc
 report_source/*.fls
 report_source/*.fdb_latexmk
 report_source/*.synctex.gz
+
+# Part A: local input data, experimental outputs, report draft and tests
+/data/part_a/*
+!/data/part_a/.gitkeep
+/my_img/
+/results/part_a/*
+!/results/part_a/.gitkeep
+/report_source/part_a.md
+/tests/*.py
