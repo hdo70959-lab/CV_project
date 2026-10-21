@@ -1,0 +1,12 @@
+{
+  "valid": true,
+  "dense_cases": 12,
+  "successful_dense_cases": 12,
+  "geometry_cases": 3,
+  "point_clouds": 2,
+  "filtered_point_clouds": 2,
+  "geometry_warnings": 0,
+  "camera_model_kind": "assumed",
+  "physical_3d_accuracy_established": false,
+  "checked_at_utc": "2026-10-19T09:53:55.417904+00:00"
+}

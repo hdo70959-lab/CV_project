@@ -1,0 +1,269 @@
+{
+  "status": "completed_with_assumed_camera",
+  "config": {
+    "profile": "full",
+    "methods": [
+      "bm",
+      "sgbm"
+    ],
+    "num_disparities": [
+      32,
+      64
+    ],
+    "block_sizes": [
+      5,
+      9,
+      15
+    ],
+    "min_disparity": -16,
+    "ransac_thresholds_px": [
+      0.5,
+      1.0,
+      2.0
+    ],
+    "max_features": 5000,
+    "ratio": 0.75,
+    "seed": 42,
+    "confidence": 0.999,
+    "max_iters": 5000,
+    "lr_tolerance_px": 1.0,
+    "bad_pixel_threshold_px": 1.0,
+    "warmup": 3,
+    "repetitions": 20
+  },
+  "environment": {
+    "python": "3.13.14",
+    "platform": "Linux-7.2.11-200.fc44.x86_64-x86_64-with-glibc2.43",
+    "opencv": "5.0.0",
+    "opencv_threads": 1,
+    "opencl": false,
+    "packages": {
+      "numpy": "2.5.4",
+      "matplotlib": "3.11.2",
+      "opencv-contrib-python-headless": "5.0.0.93"
+    }
+  },
+  "source_sha256": "0d40e77ea16edc74a5690befc662c3d1746ba748f523139ad3432d38ab9867e4",
+  "input_metadata": {
+    "dataset": "Middlebury Optical Flow, Other Datasets",
+    "scene": "Venus",
+    "source_category": "Stereo",
+    "source_page": "https://vision.middlebury.edu/flow/data/",
+    "source_archives": {
+      "images": "https://vision.middlebury.edu/flow/data/comp/zip/other-color-twoframes.zip",
+      "ground_truth_flow": "https://vision.middlebury.edu/flow/data/comp/zip/other-gt-flow.zip"
+    },
+    "files": {
+      "frame10.png": {
+        "role_in_source": "frame 10; left/reference image, exact crop of stereo Venus im2.ppm at (10,0)",
+        "width": 420,
+        "height": 380,
+        "channels": 3,
+        "color_space": "RGB",
+        "sha256": "f36d77900848c4d5bf6f31898e43d3db4c912f474f273b331d7a96113ea5a637"
+      },
+      "frame11.png": {
+        "role_in_source": "frame 11; right/target image, exact crop of stereo Venus im6.ppm at (0,0)",
+        "width": 420,
+        "height": 380,
+        "channels": 3,
+        "color_space": "RGB",
+        "sha256": "45860656c48fec7fff1ed3528bd2d72f4f6dbf71c6d621fb2e0f48a531e617d0"
+      },
+      "flow10.flo": {
+        "role_in_source": "public optical flow GT from frame 10 to frame 11; horizontal rectified flow converted by disparity=-u in current image coordinates",
+        "width": 420,
+        "height": 380,
+        "format": "Middlebury .flo",
+        "sha256": "4f5e58609d02d8198f838de8b3f34a952cfaebf284938daa255066c535610f34"
+      }
+    },
+    "preprocessing": "None; files extracted directly from the official color two-frame and ground-truth-flow archives.",
+    "stereo_geometry": {
+      "left": "frame10.png",
+      "right": "frame11.png",
+      "rectification_evidence": "All 159600 GT flow vectors have v=0; pixel equality verified against crops of original rectified stereo views.",
+      "disparity_convention": "x_left - x_right = -flow_u for the current images; negative and zero disparities are valid",
+      "source_image_size": [
+        434,
+        383
+      ],
+      "left_crop_xy": [
+        10,
+        0
+      ],
+      "right_crop_xy": [
+        0,
+        0
+      ],
+      "crop_verification_source": "https://vision.middlebury.edu/stereo/data/scenes2001/data/venus/venus.zip",
+      "source_files_retained": false,
+      "camera_model": "assumed pinhole, horizontal FoV 30 degrees, normalized baseline 1; see part_b.assumed_camera_model and saved camera.json",
+      "camera_assumption_reference": "Basha, Moses, Kiryati (2013), Multi-view Scene Flow Estimation: A View Centered Variational Approach, IJCV 101, 6-21, section 4.1, DOI 10.1007/s11263-012-0542-7"
+    },
+    "known_gaps": [
+      "No measured camera calibration has been identified; reconstruction uses explicitly cited assumptions and normalized units, not physical depth.",
+      "No occlusion ground-truth mask is provided for the cropped flow pair; consistency masks are reliability estimates.",
+      "Usage and redistribution terms were not verified during preparation."
+    ]
+  },
+  "camera_model_kind": "assumed",
+  "physical_3d_accuracy_established": false,
+  "disparity_convention": "x_left - x_right in current cropped images; GT = -flow_u",
+  "rectification": {
+    "evidence": "All valid GT flow has |v| <= 0.0001 px; no additional warp.",
+    "occlusion_ground_truth_available": false
+  },
+  "geometry_protocol": {
+    "estimator": "cv2.USAC_MAGSAC (RANSAC family)",
+    "native_random_state": 0,
+    "local_optimization": "native sigma-consensus preset",
+    "uses_ground_truth_for_estimation": false,
+    "diagnostic_angle_p95_limit_deg": 2.0
+  },
+  "timing_protocol": {
+    "unit": "ms",
+    "warmup": 3,
+    "repetitions": 20,
+    "dense_scope": "matcher creation, left/right native computation, conversion and consistency masks; excludes I/O, evaluation, figures and 3D",
+    "geometry_scope": "SIFT plus KNN/ratio and RANSAC timed separately as single samples"
+  },
+  "point_clouds": {
+    "bm_n32_b9": {
+      "status": "ok",
+      "candidate_pixels": 125653,
+      "rejected_denominator": 78,
+      "rejected_nonfinite": 0,
+      "rejected_depth": 0,
+      "point_count": 125575,
+      "camera_model_kind": "assumed",
+      "unit": "normalized_baseline_units",
+      "filter": {
+        "filter_method": "disparity_connected_components",
+        "max_component_pixels": 100,
+        "max_neighbor_disparity_difference_px": 1.0,
+        "uses_ground_truth": false,
+        "input_points": 125575,
+        "removed_points": 980,
+        "retained_points": 124595
+      }
+    },
+    "sgbm_n32_b9": {
+      "status": "ok",
+      "candidate_pixels": 144489,
+      "rejected_denominator": 0,
+      "rejected_nonfinite": 0,
+      "rejected_depth": 0,
+      "point_count": 144489,
+      "camera_model_kind": "assumed",
+      "unit": "normalized_baseline_units",
+      "filter": {
+        "filter_method": "disparity_connected_components",
+        "max_component_pixels": 100,
+        "max_neighbor_disparity_difference_px": 1.0,
+        "uses_ground_truth": false,
+        "input_points": 144489,
+        "removed_points": 0,
+        "retained_points": 144489
+      }
+    }
+  },
+  "errors": [],
+  "warnings": [],
+  "feature_matching_ms": 118.621508,
+  "artifacts": {
+    "camera.json": "c229824e9f0cb94871245c606dc7f800005d4a3c26512cc24a306d286e7b7e47",
+    "cases/bm_n32_b15/case.json": "c56d8c7ca3e2be34b39274b16e3c08ab13965b85f1953dab2116baf3f17b3af8",
+    "cases/bm_n32_b15/disparity.npz": "e09d240b305fb0bacc7d9a45b17d4c9a9c558e06287d23505f841afd24ace4d5",
+    "cases/bm_n32_b15/settings.json": "79ec976168c3e00bae911fcb7b7a46c444f79eefcd1b97c6d77c81cff4f119e3",
+    "cases/bm_n32_b5/case.json": "22d91e9daccf1ddc985739682673c9df4e65bd9029c03720b5be7325b7288565",
+    "cases/bm_n32_b5/disparity.npz": "a1c5d11aa55173e3e69110664b968d67ede560cfd159622e6b176a080dad5e3c",
+    "cases/bm_n32_b5/settings.json": "3beb58321a00fe06bb540f05fe18739f3773de603a2b2bbd3435f304733b1f0e",
+    "cases/bm_n32_b9/case.json": "45a232f3910937c78a2ad28b3eb980c13eb4194ab4731279a611589baf70bfa2",
+    "cases/bm_n32_b9/cloud.npz": "1d4667db7e72329715693a9fae917dfd30739e7d3e3a85604112a6e1a66d017a",
+    "cases/bm_n32_b9/cloud.ply": "db199e699a29f6de63d48635794be12e1a3345b46d2f1ba14d6c537ffa0f6af2",
+    "cases/bm_n32_b9/cloud_filtered.npz": "e0dab1acb7b4853a3c8252f8b0d3db0033b260c5e912492ede34e6832d8bbc5f",
+    "cases/bm_n32_b9/cloud_filtered.ply": "467e3d423cf0ff6d9966b90e4b79d774185f716f83e87d950f3165c439738a60",
+    "cases/bm_n32_b9/disparity.npz": "c6ef3c84a0a78cebc271300d03331402e4257ec2a06415da4341ec6b32bcc99b",
+    "cases/bm_n32_b9/settings.json": "1afc5afcf20f7ec51fa2dfda6e48e0f909510f80fcf9b5b51a5bcbe3eb85dcf1",
+    "cases/bm_n64_b15/case.json": "1ae7323ccd10d0718e89213246d736fc61fe1a1e1f654ec1b6c8ba901ff05950",
+    "cases/bm_n64_b15/disparity.npz": "0c2b5d465bfab582a1cfa497c3b8069aac66c3d0391f2e7616c1798742f9d9df",
+    "cases/bm_n64_b15/settings.json": "fcb2c897b7efa4bde2173343960685d4ce179c98b9a7871fcf09f1e44d93183c",
+    "cases/bm_n64_b5/case.json": "23359bd82a40dcfb30e312c4c6ff5aba07339080c5bfde8077d7622499ff3106",
+    "cases/bm_n64_b5/disparity.npz": "d21f35c46ed3030e480153902a9c29d1afdc1b8109d54b673d3719c20f392910",
+    "cases/bm_n64_b5/settings.json": "b3ce1ffdea6cf0bc54b5fe11b7f4ad7af1a3f7a41364f4b112e7d4b8c21af1ab",
+    "cases/bm_n64_b9/case.json": "a979a158aa497cf51d587d80923f619043eab98d8bfdc33468bc59939b57e2a3",
+    "cases/bm_n64_b9/disparity.npz": "45ea477526b42604acecb24013f9cd34f7de57ec82f9ab72a68f404ac7c96b25",
+    "cases/bm_n64_b9/settings.json": "7a8785d074be713f637e17ed0ba43bdd0f24942bf6a1f1d5aabadb72fd8739a5",
+    "cases/sgbm_n32_b15/case.json": "06f5c4ab4dbc4ffe61f20839c10b24c86eef6ef74c790db93ba35669e8cd3e63",
+    "cases/sgbm_n32_b15/disparity.npz": "3db72dcb4f4b51abcb232313eb9f90098596c98f08ae4fc842b31860431af4c9",
+    "cases/sgbm_n32_b15/settings.json": "189eb88f3a5f05dad704792b049450d918c396fc246dbecebad2dffca44ecad2",
+    "cases/sgbm_n32_b5/case.json": "c5447ba89096330bdff2cc7d9b5f232f451143883c603ee7aaaa3b8de834e50b",
+    "cases/sgbm_n32_b5/disparity.npz": "5abb6872398a0ab3febd8a4a528b1ebdf36155b08c3efff97cb20407ea82cd97",
+    "cases/sgbm_n32_b5/settings.json": "01fa0f85dc91599f9bf6d447ac1f579f78befb14fedcb1ac2fed8a0092d95d6b",
+    "cases/sgbm_n32_b9/case.json": "cad66fef8646d4b30cca6085e000b97e6786b7f006f64b41735b993906097d05",
+    "cases/sgbm_n32_b9/cloud.npz": "616d5e906ce5182dc6c8e13123fecbe068b0d9589c8247c8c585a628eb918e61",
+    "cases/sgbm_n32_b9/cloud.ply": "7d3dcb0434025113423c0d5d20bead491c2debc529fdc5842f87f513e8019c6d",
+    "cases/sgbm_n32_b9/cloud_filtered.npz": "616d5e906ce5182dc6c8e13123fecbe068b0d9589c8247c8c585a628eb918e61",
+    "cases/sgbm_n32_b9/cloud_filtered.ply": "7d3dcb0434025113423c0d5d20bead491c2debc529fdc5842f87f513e8019c6d",
+    "cases/sgbm_n32_b9/disparity.npz": "426a346591e5f774a20f937a1db73a7cd16dc9ee77e558981dacb616c5bebc6f",
+    "cases/sgbm_n32_b9/settings.json": "83b9d0682cc9aae9bba498892cd3239a1b0595b026f8eef897b808d08e8ba766",
+    "cases/sgbm_n64_b15/case.json": "493842ba718bb860eb00ebcd38d7616e6a89640a53f2a03911cde26fe354f9ae",
+    "cases/sgbm_n64_b15/disparity.npz": "e4aa30975ecbeb0cf1bb43a104ae186dae0892be54aa6c8ec8d18c64bd6bbb84",
+    "cases/sgbm_n64_b15/settings.json": "39a634d38594f3c14713d2a075753bd51255d7927ed8fedc9b81cdcbae4b3caa",
+    "cases/sgbm_n64_b5/case.json": "495bca1194f4cb35e9c6b1cde00b1330a0d5a801f3c1b42e4752e2ad28d3a100",
+    "cases/sgbm_n64_b5/disparity.npz": "954fe1a478860dd61ef369023ca4fb9f7a50dd0ce84812611a2910956625b409",
+    "cases/sgbm_n64_b5/settings.json": "b69e16292a7bdfaad0c6cfa7370f26774fbbc86c462cc3d78b3a04fb7d621a7d",
+    "cases/sgbm_n64_b9/case.json": "8d79e8d2ff222dc01253cf0baa3a1726d7015f3db7c230dcefdd83b3a2a02e29",
+    "cases/sgbm_n64_b9/disparity.npz": "b33084cc998c0e45289f94d4ca5863e680ea13a6af3a1a5db12e1f25712cffbe",
+    "cases/sgbm_n64_b9/settings.json": "e45de18d5ece0720e05457321a47292ee9d8734dce0a80670cf1ed382738e5e2",
+    "common_domain_metrics.csv": "44f933df34811e3e33d5113157511211590a5d4c64dd9eaf4001982ef43d2063",
+    "figures/bm_disparity_grid.png": "18183deb9c84e97ec68bff79414f944c4ecd3c6a343d5dda88be34800feaea7b",
+    "figures/bm_n32_b15_diagnostics.png": "e59026a9b3eb54af87a61a451e00fc2e67923bf70f1214b6b5e16aadde32ad3b",
+    "figures/bm_n32_b5_diagnostics.png": "4e302a25fa9625b69ab9e505bc03f02fc7b9dca086b9f6693fc14b91b212359b",
+    "figures/bm_n32_b9_depth.png": "905a962f535452d9830dc696e946cfcbb9b5c98c16482c75e78e9131f0137872",
+    "figures/bm_n32_b9_depth_filtered.png": "80a5a68cc62059fc75eac68751db4677b99cbc721a85af8faf7aaa9870df0c14",
+    "figures/bm_n32_b9_diagnostics.png": "da9aba569aa9c47272bc8d71e6e454544fdb56f1ecee95838f1bf462b3a9cc0d",
+    "figures/bm_n32_b9_point_cloud.png": "d8a8254fc659d8b51e095cda2bd6268c9f9169247140d4192248b50551aaab27",
+    "figures/bm_n32_b9_point_cloud_detail.png": "d58b147859a9fe86eac32f64c1cc5a4ecc55ef2a029530c1e9dea922ff4e6680",
+    "figures/bm_n32_b9_point_cloud_filtered.png": "f5a98027831217e6e12b87e0d8dc9b6a6356b4cdaba2ebafb1ab634e5f2db705",
+    "figures/bm_n64_b15_diagnostics.png": "74ffc608086b5f2aa54e183835e2e6713ba890899c1319c0a03c2b26b8f7fcda",
+    "figures/bm_n64_b5_diagnostics.png": "558c10e2a8b7d7f34a6854895d4309b7c35a4e7380f98af643f9db8b665aa04b",
+    "figures/bm_n64_b9_diagnostics.png": "994e3aeb40fec1584fe706487a066adfdfb343f826f16ca38217cc2f781f7516",
+    "figures/geometry_validation.png": "4878c3239e81a82de9295ef2695dc931c0b67ad6e480802467b2278323b4c90c",
+    "figures/initial_matches.png": "933aee49a1c57d225b9b96bba2e68a4005eeb3fad90279be2dd1c83676811528",
+    "figures/inlier_matches.png": "35f588ff774a55bcc8289a3537b51c377bd410106ebf514c2ec01cd4d869ce42",
+    "figures/input_and_ground_truth.png": "2ed269ebd81c4147658152c5960e15f8a58d98f64aa0aa9b2909ce65cff7a959",
+    "figures/metric_comparison.png": "6c56545404139b2f6af9cb3718f85ad4826854da6929e0cad285e17e59addda5",
+    "figures/ransac_t0p5_epipolar.png": "8312f364e9423709976699ae0156e2d42a65bcc7809b6159e0452b03f961ed1c",
+    "figures/ransac_t1_epipolar.png": "6ac55c78c1fd60349456215b69876ca07d6ff6241f1205f5462e6c3897271b05",
+    "figures/ransac_t2_epipolar.png": "4f302b7612fdc0fe29e4f0d28f77d908493f2eabaab554c50b7a8f9f6b80e4a3",
+    "figures/sgbm_disparity_grid.png": "825f0516b49f683c6f61e938ccecc47fc328cc196f4de5b48a0f36e4c9b3a519",
+    "figures/sgbm_n32_b15_diagnostics.png": "0cf890d702005d6639bd214ecd95277b76ef324d0476d25129a492ef4afced96",
+    "figures/sgbm_n32_b5_diagnostics.png": "3458d959b3606d2a17cce1f743d776a5504e56ce6529096fe589f3f44241fb8f",
+    "figures/sgbm_n32_b9_depth.png": "6f701eb3d276f6beb55bc582ec58fea8e61c47381355f5488d93453711d384e0",
+    "figures/sgbm_n32_b9_depth_filtered.png": "c46d36222abd8b6f3b1eba72b0abadd8eb374899aaa1b86e1be543bb17272292",
+    "figures/sgbm_n32_b9_diagnostics.png": "0a2c7c82dbd2f57f3a6bd675a526b1cbf38f30e8a340881771e762ac7d39a457",
+    "figures/sgbm_n32_b9_point_cloud.png": "d9dc399fe0bffaae32ac145bf3b0b19afcf0a13f63fcb6041181a05a75fb5828",
+    "figures/sgbm_n32_b9_point_cloud_detail.png": "bbd99d6bfe004aa9c9d9328cf275fe7c652c7f076d03371c01939e22b551d35f",
+    "figures/sgbm_n32_b9_point_cloud_filtered.png": "9b8e01e33c0365c286e7f8e82dd509c8d5582d1f2371466a17de59c9239c3a2a",
+    "figures/sgbm_n64_b15_diagnostics.png": "02f4fffd5dc1e3f196f8a0a99283b4efe0bb0dc4153a0430e8c04f1107e3bcf8",
+    "figures/sgbm_n64_b5_diagnostics.png": "35296c77528a38a2f836085a2ac9ffbffe17118387786d3ef41441509f097fb8",
+    "figures/sgbm_n64_b9_diagnostics.png": "512f35822985820c6ac64240aa652b279571ab326dc158fdcf98cfa06219d2a5",
+    "figures.json": "13fa9dda659a38d27494163fbf0ce46a57146b187852e037a21cf14e49a5c03f",
+    "geometry/matches.npz": "5144c8b0332af5302aa4549b649d46273b8aaac835b4f65f049997ca7d5c5e8b",
+    "geometry/ransac_t0p5.npz": "14994372bab344f1cb9b2d9d131a872881333c1494959f6907bc614652f335ae",
+    "geometry/ransac_t1.npz": "8e9d40e4be787d739784f8b00b9a049166c36c3b761826cf1a8288ec1b4650f0",
+    "geometry/ransac_t2.npz": "1d76484854954753f8716c1708b688d08d7d6c9057e4fb19a64252db54490ba4",
+    "geometry_metrics.csv": "a696c3aa78ac9970fd6b6bb8ccb0a34f55b86da474230a3825a8803bfc653f29",
+    "ground_truth.npz": "be0020201e9be7d772615908905fda8029f65579b4b214ae09ae42cf60e36225",
+    "inputs/flow10.flo": "4f5e58609d02d8198f838de8b3f34a952cfaebf284938daa255066c535610f34",
+    "inputs/frame10.png": "f36d77900848c4d5bf6f31898e43d3db4c912f474f273b331d7a96113ea5a637",
+    "inputs/frame11.png": "45860656c48fec7fff1ed3528bd2d72f4f6dbf71c6d621fb2e0f48a531e617d0",
+    "inputs/metadata.json": "cbcd29554a4d7a670b2a774b415f1f379ae7c33968e0509569174df1bf2072f4",
+    "metrics.csv": "e7d4246b5971c08b3d11fbe2d8e69e261fb7ef87dc4f84bf1d3f76b5131ffb3a",
+    "references.json": "8c97e2ad151ff1e034473cf58a6d2d2fedb46fd3c88b7724ebfc26fd43809d7f",
+    "source_code.py": "0d40e77ea16edc74a5690befc662c3d1746ba748f523139ad3432d38ab9867e4",
+    "timings.csv": "58ae402771bc9687227a6a72fde53c0f7ca14b33640fb6bab73fc9b1c7ff4438"
+  }
+}

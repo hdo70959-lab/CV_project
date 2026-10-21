@@ -1,0 +1,146 @@
+{
+  "camera_model_kind": "assumed",
+  "length_unit": "normalized_baseline_units",
+  "coordinate_frame": "Left camera: X right, Y down, Z forward.",
+  "label": "Assumed camera model; normalized units",
+  "reference": "Basha2013, section 4.1",
+  "image_size": [
+    420,
+    380
+  ],
+  "source_image_size": [
+    434,
+    383
+  ],
+  "horizontal_fov_degrees": 30,
+  "focal_px": 809.8550252424465,
+  "baseline": 1.0,
+  "crop_xy_left": [
+    10,
+    0
+  ],
+  "crop_xy_right": [
+    0,
+    0
+  ],
+  "doffs_px": 10.0,
+  "K_left": [
+    [
+      809.8550252424465,
+      0.0,
+      206.5
+    ],
+    [
+      0.0,
+      809.8550252424465,
+      191.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "K_right": [
+    [
+      809.8550252424465,
+      0.0,
+      216.5
+    ],
+    [
+      0.0,
+      809.8550252424465,
+      191.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "P_left": [
+    [
+      809.8550252424465,
+      0.0,
+      206.5,
+      0.0
+    ],
+    [
+      0.0,
+      809.8550252424465,
+      191.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ]
+  ],
+  "P_right": [
+    [
+      809.8550252424465,
+      0.0,
+      216.5,
+      -809.8550252424465
+    ],
+    [
+      0.0,
+      809.8550252424465,
+      191.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ]
+  ],
+  "Q": [
+    [
+      1,
+      0,
+      0,
+      -206.5
+    ],
+    [
+      0,
+      1,
+      0,
+      -191
+    ],
+    [
+      0,
+      0,
+      0,
+      809.8550252424465
+    ],
+    [
+      0,
+      0,
+      1,
+      10
+    ]
+  ],
+  "additional_assumptions": [
+    "30 degrees interpreted as horizontal FoV on the original 434x383 images",
+    "square pixels, zero skew, parallel cameras, baseline normalized to 1",
+    "principal points at the source image center; no original principal-point difference",
+    "zero distortion in the already rectified input coordinate frame"
+  ],
+  "crop_evidence": {
+    "source_archive": "https://vision.middlebury.edu/stereo/data/scenes2001/data/venus/venus.zip",
+    "left_source": "im2.ppm",
+    "right_source": "im6.ppm",
+    "verification": "Exact RGB pixel equality of the 420x380 crops, checked during dataset preparation.",
+    "left_source_sha256": "fef870c1e2471fe5b3b2bac9ca71810e8503e1489e4203288a982b40355b9172",
+    "right_source_sha256": "b2fca7b6f3aa7e1a34bc5eac2d99cbbc5dfc77ce531777b71153e2ed73290004"
+  },
+  "input_sha256": {
+    "frame10.png": "f36d77900848c4d5bf6f31898e43d3db4c912f474f273b331d7a96113ea5a637",
+    "frame11.png": "45860656c48fec7fff1ed3528bd2d72f4f6dbf71c6d621fb2e0f48a531e617d0"
+  },
+  "depth_unit_description": "Coordinates are expressed in units of the selected baseline B=1."
+}

@@ -1,0 +1,86 @@
+{
+  "Baker2007": {
+    "authors": [
+      "Simon Baker",
+      "Daniel Scharstein",
+      "J. P. Lewis",
+      "Stefan Roth",
+      "Michael J. Black",
+      "Richard Szeliski"
+    ],
+    "title": "A Database and Evaluation Methodology for Optical Flow",
+    "year": 2007,
+    "conference": "IEEE International Conference on Computer Vision",
+    "doi": "10.1109/ICCV.2007.4408903",
+    "url": "https://cs.brown.edu/people/mjblack/Papers/flowEval07.pdf",
+    "section": "3.4 and Figure 6",
+    "used_for": "Venus modified stereo data and crop-induced signed flow."
+  },
+  "OpenCVUSAC": {
+    "url": "https://docs.opencv.org/4.x/de/d3e/tutorial_usac.html",
+    "source": "https://github.com/opencv/opencv/blob/5.0.0/modules/geometry/src/usac/ransac_solvers.cpp",
+    "used_for": "USAC_MAGSAC RANSAC preset with native sigma-consensus local optimization; native random state 0."
+  },
+  "Basha2013": {
+    "authors": [
+      "Tali Basha",
+      "Yael Moses",
+      "Nahum Kiryati"
+    ],
+    "title": "Multi-view Scene Flow Estimation: A View Centered Variational Approach",
+    "year": 2013,
+    "journal": "International Journal of Computer Vision",
+    "volume": 101,
+    "pages": "6–21",
+    "doi": "10.1007/s11263-012-0542-7",
+    "url": "https://link.springer.com/article/10.1007/s11263-012-0542-7",
+    "author_pdf": "https://people.csail.mit.edu/talidekel/papers/MVSF_IJCV13.pdf",
+    "section": "4.1 (page 9 of the author PDF)",
+    "used_for": "30 degree viewing angle and focal-length construction for the pinhole camera model."
+  },
+  "Baker2011": {
+    "authors": [
+      "Simon Baker",
+      "Daniel Scharstein",
+      "J. P. Lewis",
+      "Stefan Roth",
+      "Michael J. Black",
+      "Richard Szeliski"
+    ],
+    "title": "A Database and Evaluation Methodology for Optical Flow",
+    "year": 2011,
+    "journal": "International Journal of Computer Vision",
+    "volume": 92,
+    "pages": "1–31",
+    "doi": "10.1007/s11263-010-0390-2",
+    "url": "https://vision.middlebury.edu/flow/floweval-ijcv2011.pdf",
+    "used_for": "Flow dataset provenance; modified stereo images and shifted disparity ranges."
+  },
+  "Scharstein2002": {
+    "authors": [
+      "Daniel Scharstein",
+      "Richard Szeliski"
+    ],
+    "title": "A Taxonomy and Evaluation of Dense Two-Frame Stereo Correspondence Algorithms",
+    "year": 2002,
+    "journal": "International Journal of Computer Vision",
+    "volume": 47,
+    "pages": "7–42",
+    "url": "https://vision.middlebury.edu/stereo/taxonomy-IJCV.pdf",
+    "section": "5.2",
+    "used_for": "Original Venus acquisition, rectification and disparity coordinate convention."
+  },
+  "MiddleburyFlow": {
+    "url": "https://vision.middlebury.edu/flow/data/",
+    "format_url": "https://vision.middlebury.edu/flow/code/flow-code/README.txt",
+    "used_for": "Official input archives, .flo layout and unknown-flow threshold."
+  },
+  "OpenCV5": {
+    "url": "https://github.com/opencv/opencv/tree/5.0.0/modules/stereo",
+    "used_for": "Native BM/SGBM, fixed-point disparities and effective disp12MaxDiff behavior."
+  },
+  "OpenCVGeometry": {
+    "url": "https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html",
+    "used_for": "findFundamentalMat, epipolar lines and reprojectImageTo3D API conventions; APIs checked on installed OpenCV 5.0.0."
+  }
+}

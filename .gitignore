@@ -52,3 +52,6 @@ report_source/*.synctex.gz
 # Notebook and test caches
 .ipynb_checkpoints/
 .pytest_cache/
+
+# Generated hand-in bundle
+/submission/

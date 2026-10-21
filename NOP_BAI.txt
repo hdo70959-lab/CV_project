@@ -1,0 +1,15 @@
+HỒ SƠ NỘP BÀI INS3155
+
+Sinh viên: Do Nam Hai
+Mã sinh viên: 23070846
+
+Tệp nộp:
+- 23070846_Do_Nam_Hai_Report.pdf: báo cáo tiếng Anh cuối cùng.
+- 23070846_Do_Nam_Hai_Code.zip: mã nguồn, notebook có output hình, README, dependency lock, dữ liệu đầu vào, kết quả được báo cáo sử dụng và run B xác thực đang hiển thị trong notebook.
+
+Tái lập môi trường: uv sync --locked --group dev
+Lệnh chạy A: uv run python src/part_a.py --profile full
+Lệnh chạy B: uv run python src/part_b.py --profile full
+Lệnh chạy C: uv run python src/part_c.py --profile full
+
+Chi tiết dữ liệu, cấu hình, notebook và giới hạn thí nghiệm được ghi trong README.md và báo cáo. Part B dùng camera giả định; point cloud biểu diễn hình học theo baseline chuẩn hoá, không phải độ sâu vật lý đã hiệu chuẩn.

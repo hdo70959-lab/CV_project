@@ -1,0 +1,29 @@
+{
+  "left": {
+    "minDisparity": -16,
+    "numDisparities": 64,
+    "blockSize": 5,
+    "uniquenessRatio": 10,
+    "preFilterCap": 31,
+    "speckleWindowSize": 0,
+    "speckleRange": 0,
+    "disp12MaxDiff": 1000000,
+    "textureThreshold": 10,
+    "preFilterType": 1,
+    "preFilterSize": 9
+  },
+  "right": {
+    "minDisparity": -47,
+    "numDisparities": 64,
+    "blockSize": 5,
+    "uniquenessRatio": 10,
+    "preFilterCap": 31,
+    "speckleWindowSize": 0,
+    "speckleRange": 0,
+    "disp12MaxDiff": 1000000,
+    "textureThreshold": 10,
+    "preFilterType": 1,
+    "preFilterSize": 9
+  },
+  "repeat_deterministic": true
+}

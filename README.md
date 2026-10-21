@@ -17,7 +17,7 @@ The English report source is [report_source/main.tex](report_source/main.tex). I
 | [src/part_a.py](src/part_a.py) | Filtering, corruption, metrics, timing and result export |
 | [src/part_b.py](src/part_b.py) | Stereo geometry, dense matching, masks, camera model and PLY export |
 | [src/part_c.py](src/part_c.py) | Features, matching, RANSAC H, warping, blending and comparisons |
-| [notebooks/part_a.ipynb](notebooks/part_a.ipynb), [part_b.ipynb](notebooks/part_b.ipynb), [part_c.ipynb](notebooks/part_c.ipynb) | Parameters and runnable workflows; generated outputs are stored under `results/` |
+| [notebooks/part_a.ipynb](notebooks/part_a.ipynb), [part_b.ipynb](notebooks/part_b.ipynb), [part_c.ipynb](notebooks/part_c.ipynb) | Parameters, executed cells and visual outputs |
 | `data/part_a/`, `data/part_b/Venus/`, `data/part_c/` | Local inputs and metadata; supplied separately from Git |
 | `results/part_a/`, `results/part_b/`, `results/part_c/` | Run manifests, CSV/NPZ measurements, figures and reconstructed outputs |
 | [report_source/main.tex](report_source/main.tex) | English submission report covering A/B/C |
@@ -188,6 +188,8 @@ The report uses these fixed experiment IDs:
 | A | `20261019T024705Z_aef5c7be` | Summary/metric/timing CSVs, run and validation metadata, derived tables, and the seven figures referenced by the report |
 | B | `20261019T103316Z_9fe8bb55` | Metric CSVs, camera/reference metadata, report figures, and raw/filtered SGBM point clouds |
 | C, main | `20261019T105909Z_fe7aa242` | Metric/comparison CSVs, run metadata, and the figures referenced by the report |
+
+The Part B notebook retains a captured view of run `20261019T094132Z_316ceb45`; that validated run is included to preserve the notebook output provenance. The report metrics and figures use `20261019T103316Z_9fe8bb55`.
 
 The repository keeps the result files needed to read the reported measurements, inspect their manifests, display the figures, and compile the PDF. Large per-configuration images, duplicate figure exports, and intermediate feature/correspondence arrays are omitted; the Part A/B/C commands above regenerate full run directories with those artifacts. Each new run receives its own timestamp/UUID directory. When replacing a report-linked run, update its tables and figure paths together. Figures can be rebuilt with `build_figures` in the corresponding module.
 
