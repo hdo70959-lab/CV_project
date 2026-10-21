@@ -1,0 +1,1052 @@
+\documentclass[a4paper,12pt]{article}
+% \usepackage[utf8]{vietnam}
+\usepackage{geometry}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{titling}
+\usepackage{fancyhdr}
+\usepackage{parskip}
+\usepackage{titling}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+
+% Keep figures within the text area and allow them to share pages with prose.
+\setkeys{Gin}{height=0.60\textheight,keepaspectratio}
+\renewcommand{\topfraction}{0.88}
+\renewcommand{\bottomfraction}{0.75}
+\renewcommand{\textfraction}{0.10}
+\renewcommand{\floatpagefraction}{0.85}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+\setlength{\textfloatsep}{10pt plus 2pt minus 3pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{3pt}
+\setlength{\@fpbot}{0pt}
+\makeatother
+\captionsetup{font=small,skip=5pt}
+\renewcommand{\arraystretch}{1.12}
+
+% Custom colors
+\definecolor{titleblue}{RGB}{0,102,204}
+\definecolor{headingblue}{RGB}{0,51,102}
+
+% Code listing style
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{purple},
+    commentstyle=\color{gray}\itshape,
+    numberstyle=\tiny,
+    numbers=left,
+    stepnumber=1,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    frame=single,
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4
+}
+
+
+% Page layout
+\geometry{top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+
+% Header and footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{INS3155 - Computer Vision Midterm Report}}
+\fancyhead[R]{}
+\setlength{\headheight}{15pt}
+\fancyfoot[C]{\thepage}
+
+% Title customization
+\pretitle{\centering\LARGE\bfseries}
+\posttitle{\vspace{0.5cm}}
+
+\preauthor{\centering}
+\postauthor{}
+\predate{\centering}
+\postdate{}
+
+
+% Custom colors
+\definecolor{titleblue}{RGB}{0,102,204}
+\definecolor{headingblue}{RGB}{0,51,102}
+
+\begin{document}
+
+\title{\textcolor{titleblue}{Midterm Project Report}\kern-1pt}
+
+\author{\parbox{0.45\linewidth}{\centering
+Name: Do Nam Hai\\
+Student ID: 23070846\\
+Email: 23070846@vnu.edu.vn}}
+
+\date{\today}
+
+% \date{Ngày nộp: May 03, 2025}
+
+\maketitle
+
+\begin{abstract}
+This project evaluates classical image-processing methods for denoising, stereo reconstruction, and four-image panorama stitching. Mean, Gaussian, and median filters with Laplacian sharpening were compared on synthetic Gaussian and salt-and-pepper noise using PSNR, SSIM, MSE, and runtime. Gaussian filtering achieved the highest selected PSNR for Gaussian noise, while a $3\times3$ median filter performed best for impulse noise; sharpening gains depended on configuration. On the rectified Venus pair, SGBM provided higher valid-disparity coverage and lower ground-truth disparity error than BM across tested settings, with greater runtime. Reconstructed point clouds use an assumed camera model and therefore show qualitative normalized depth only. For stitching, SIFT, ORB, and AKAZE were evaluated with RANSAC homographies and feather blending; SIFT had the lowest selected pooled reprojection error, while ORB showed greater corner sensitivity. The results reveal trade-offs among fidelity, coverage, speed, and geometric stability.
+\end{abstract}
+
+\section{Introduction}
+Image filtering, stereo reconstruction, and image stitching address three practical problems in computer vision: improving image quality, recovering scene structure, and combining overlapping views. Noise can obscure fine details, uncertain correspondences can distort reconstructed geometry, and inaccurate alignment can produce visible seams in a panorama. Traditional computer vision provides explicit methods for these tasks through local filtering, feature matching, and geometric estimation. Their parameters and intermediate outputs make it possible to examine how processing choices affect both numerical measurements and visible image quality.
+
+This project investigates these methods in three parts. Part A compares mean, Gaussian, and median filtering under Gaussian and salt-and-pepper noise, followed by Laplacian sharpening to examine the balance between noise removal and detail enhancement. Part B studies stereo correspondences, fundamental matrix estimation, and disparity computation using Block Matching (BM) and Semi-Global Block Matching (SGBM), with attention to the camera assumptions required for 3D reconstruction. Part C compares feature detectors and descriptors in a pipeline that matches, aligns, and blends four overlapping images into a panorama. Each part presents the methodology, implementation and results, and comparative analysis. Quantitative measurements and visual comparisons are used together to assess accuracy, runtime, and failure cases, followed by the overall conclusions and possible improvements.
+
+\section{Part A: Image Filtering}
+\label{sec:part-a}
+\subsection{Methodology}
+
+\textbf{Reference image and processing workflow.}\par
+The input is \texttt{succulent\_20231108\_171619.jpg}, a photograph containing succulent leaves, fine gravel, a glazed pot, and a broad background. Its encoded dimensions are $4128\times3096$ pixels. Correcting EXIF orientation 6 produces a $3096\times4128$ RGB image, which is resized to $768\times1024$ using OpenCV's \texttt{INTER\_AREA}. No crop is applied to the reference, and the original JPEG is preserved. The available metadata records the original filename and local path but does not identify the photographer or usage terms; whether the image was self-captured could not be verified. All quality measurements use this resized image before synthetic corruption as the reference.
+
+\begin{center}
+\small
+\fbox{EXIF correction, RGB conversion, and area resize}\\[5pt]
+$\downarrow$\\[5pt]
+\fbox{Gaussian or salt-and-pepper noise}\\[5pt]
+$\downarrow$\\[5pt]
+\fbox{Mean, Gaussian, or median denoising}\\[5pt]
+$\downarrow$\\[5pt]
+\fbox{Scaled Laplacian sharpening}\\[5pt]
+$\downarrow$\\[5pt]
+\fbox{PSNR, SSIM, MSE, and processing time}
+\end{center}
+A separate control sharpens the noisy image directly. Both the denoised and sharpened outputs are evaluated against the same reference.
+
+\textbf{Noise models.}\par
+Gaussian noise consists of independent zero-mean samples added to each RGB element, with standard deviation $\sigma_n\in\{10,20,30\}$ in 8-bit intensity units:
+\begin{equation}
+N_G=\operatorname{round}\!\left[\operatorname{clip}_{[0,255]}(I+\epsilon)\right],
+\qquad \epsilon\sim\mathcal{N}(0,\sigma_n^2).
+\end{equation}
+Addition uses floating-point values. Clipping and rounding can change the realized noise distribution, so its measured mean and standard deviation are retained in the run manifest.
+
+Salt-and-pepper noise selects $\operatorname{round}(pHW)$ distinct spatial pixels. The tested densities are $p\in\{0.01,0.03,0.05\}$. Approximately half are set to white and half to black across all channels. The selected fraction and the fraction whose values actually change are recorded separately. Seeds 42, 43, and 44 are fixed; random-stream identity also includes the noise type and level. Every method receives the same corrupted image for each noise condition and seed.
+
+\textbf{Denoising and sharpening.}\par
+For a $k\times k$ neighbourhood $\Omega_k$, the mean filter is
+\begin{equation}
+D_M(x,y,c)=\frac{1}{k^2}\sum_{(u,v)\in\Omega_k}N(x+u,y+v,c).
+\end{equation}
+The Gaussian filter uses a finite normalized kernel:
+\begin{equation}
+G(u,v)=\frac{\exp[-(u^2+v^2)/(2\sigma_f^2)]}
+{\sum_{(a,b)\in\Omega_k}\exp[-(a^2+b^2)/(2\sigma_f^2)]},
+\qquad D_G=G*N.
+\end{equation}
+The median filter replaces each channel value with the median of its neighbourhood. These operations use \texttt{cv2.blur}, \texttt{cv2.GaussianBlur}, and \texttt{cv2.medianBlur}, independently per channel. Replicated borders are used throughout, including the median filter's native border handling.\footnote{OpenCV filtering API: \url{https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html}.}
+
+Laplacian enhancement follows denoising in the main pipeline:
+\begin{equation}
+J=\operatorname{round}\!\left[\operatorname{clip}_{[0,255]}
+\left(D-\alpha s_k\Delta_kD\right)\right],
+\qquad s_k=2^{4-2k}.
+\label{eq:a-sharpening}
+\end{equation}
+The derivative is computed with \texttt{cv2.Laplacian} in float32 to preserve its sign. Apertures $k\in\{3,5,7\}$ use scales $1/4$, $1/64$, and $1/1024$ to control derivative gain across apertures. The strength is $\alpha\in\{0.1,0.2,0.25,0.5\}$. Sharpening enhances local contrast and is assessed separately from noise removal.\footnote{\raggedright OpenCV Laplace operator: \url{https://docs.opencv.org/4.x/d5/db5/tutorial_laplace_operator.html}.}
+
+\textbf{Quality metrics and runtime.}\par
+For $N=3HW$ RGB elements, the reference $I$ and result $J$ are compared using
+\begin{equation}
+\operatorname{MSE}=\frac{1}{N}\sum_{i=1}^{N}(I_i-J_i)^2,
+\qquad
+\operatorname{PSNR}=10\log_{10}\frac{255^2}{\operatorname{MSE}}.
+\end{equation}
+Differences and squares use float64 to avoid unsigned-integer overflow. MSE is reported in squared 8-bit intensity units. Zero MSE gives infinite PSNR. SSIM measures local luminance, contrast, and structure:
+\begin{equation}
+\operatorname{SSIM}(x,y)=
+\frac{(2\mu_x\mu_y+C_1)(2\sigma_{xy}+C_2)}
+{(\mu_x^2+\mu_y^2+C_1)(\sigma_x^2+\sigma_y^2+C_2)},
+\end{equation}
+where $C_1=(0.01\cdot255)^2$ and $C_2=(0.03\cdot255)^2$. The implementation uses \texttt{data\_range=255}, \texttt{channel\_axis=-1}, Gaussian window weights with sigma 1.5, and population covariance. Channel scores are averaged. The SSIM window sigma is distinct from the filter and noise sigmas.\footnote{scikit-image quality metrics: \url{https://scikit-image.org/docs/stable/api/skimage.metrics.html\#skimage.metrics.structural_similarity}.}
+
+Quality is reported as mean $\pm$ sample standard deviation over three seeds; PSNR is averaged in dB. Each processed case has two warm-ups and ten timed repetitions per seed. A configuration's runtime is the median of its 30 samples, with interquartile range (IQR) in parentheses. Timing includes processing checks and array conversions, and excludes noise generation, metric computation, disk I/O, and plotting. Denoising--sharpening chains are timed as complete operations. OpenCV uses one thread with OpenCL disabled. No filter runtime is assigned to noisy baselines.
+
+\subsection{Implementation and Results}
+
+\textbf{Experimental setup and parameter grid.}\par
+The experiment was implemented with OpenCV, NumPy, Pillow, scikit-image, and Matplotlib. Measurements were collected with Python 3.13.14 on Linux x86\_64 using NumPy 2.5.4, opencv-python-headless 5.0.0.93, Pillow 13.0.0, scikit-image 0.26.0, and Matplotlib 3.11.2. The accompanying reproducibility package records the input checksum, source snapshot, parameters, environment, and realized noise statistics.
+
+The final grid uses denoising kernels $k\in\{3,5,7,9,11\}$ and Gaussian filter sigmas $\sigma_f\in\{0.6,0.8,1.0,1.2,1.4,1.5,1.6\}$. Each of the six noise conditions has 45 denoising settings: five mean, five median, and 35 Gaussian combinations. An earlier coarse, refined, and boundary search covered 382 distinct denoiser configurations and 22 Gaussian sigma values across its searches; it was not a full Cartesian product of those values.
+
+For each noise condition and denoiser family, the highest three-seed mean whole-image PSNR selects the input to sharpening; ties prefer smaller kernels. Each condition then has 36 denoising--sharpening settings and six direct-sharpening controls at $\alpha=0.25$ or $0.5$. Including the six noisy baselines, the experiment contains 528 configuration groups, 1,584 seed-level metric rows, and 15,660 timing samples. All 528 seed-42 cases are saved as PNG files along with the reference. The accompanying machine-readable results retain every tested setting, including poorly performing configurations.
+
+\textbf{Noisy baselines and denoising results.}\par
+Table~\ref{tab:a-baselines} reports the corrupted-reference baselines. Tables~\ref{tab:a-gaussian} and~\ref{tab:a-impulse} compare the PSNR-selected configuration within each denoiser family. Appendix~\ref{app:a-full} reports every configuration in the final grid; the machine-readable results retain the full precision and individual seeds.
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\caption{Noisy baselines. Gaussian levels denote noise standard deviation; impulse levels denote the fraction of selected pixels. Quality is mean $\pm$ sample standard deviation over three seeds.}
+\label{tab:a-baselines}
+\begin{tabular}{llrrr}
+\toprule
+\multicolumn{1}{c}{Noise} & \multicolumn{1}{c}{Level} & \multicolumn{1}{c}{PSNR (dB)} & \multicolumn{1}{c}{SSIM} & \multicolumn{1}{c}{MSE} \\
+\midrule
+Gaussian & $\sigma_n=10$ & 28.2319 $\pm$ 0.0001 & 0.54723 $\pm$ 0.00010 & 97.70 $\pm$ 0.00 \\
+Gaussian & $\sigma_n=20$ & 22.3294 $\pm$ 0.0008 & 0.28528 $\pm$ 0.00013 & 380.31 $\pm$ 0.07 \\
+Gaussian & $\sigma_n=30$ & 18.9570 $\pm$ 0.0035 & 0.17793 $\pm$ 0.00011 & 826.76 $\pm$ 0.67 \\
+Salt-and-pepper & 1\% & 25.0383 $\pm$ 0.0313 & 0.74063 $\pm$ 0.00112 & 203.82 $\pm$ 1.47 \\
+Salt-and-pepper & 3\% & 20.2892 $\pm$ 0.0058 & 0.44027 $\pm$ 0.00076 & 608.35 $\pm$ 0.81 \\
+Salt-and-pepper & 5\% & 18.0649 $\pm$ 0.0108 & 0.28699 $\pm$ 0.00171 & 1015.29 $\pm$ 2.52 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{1.9pt}
+\caption{Gaussian-noise denoising comparison. Quality is mean $\pm$ sample standard deviation; time is median (IQR), in milliseconds. The filter sigma is $\sigma_f$.}
+\label{tab:a-gaussian}
+\begin{tabular}{llrrrr}
+\toprule
+\multicolumn{1}{c}{Noise level} & \multicolumn{1}{c}{Filter} & \multicolumn{1}{c}{PSNR (dB)} & \multicolumn{1}{c}{SSIM} & \multicolumn{1}{c}{MSE} & \multicolumn{1}{c}{Time (ms)} \\
+\midrule
+10 & G $5\times 5$, $\sigma_f=0.8$ & 34.2954 $\pm$ 0.0021 & 0.87793 $\pm$ 0.00003 & 24.18 $\pm$ 0.01 & 0.974 (0.294) \\
+10 & M $3\times 3$ & 33.7557 $\pm$ 0.0018 & 0.87724 $\pm$ 0.00005 & 27.38 $\pm$ 0.01 & 0.422 (0.037) \\
+10 & Med $3\times 3$ & 33.5676 $\pm$ 0.0021 & 0.84035 $\pm$ 0.00002 & 28.60 $\pm$ 0.01 & 0.325 (0.050) \\
+20 & G $7\times 7$, $\sigma_f=1.2$ & 31.2319 $\pm$ 0.0089 & 0.82511 $\pm$ 0.00014 & 48.97 $\pm$ 0.10 & 2.456 (0.419) \\
+20 & M $5\times 5$ & 30.4018 $\pm$ 0.0064 & 0.83307 $\pm$ 0.00013 & 59.28 $\pm$ 0.09 & 0.532 (0.041) \\
+20 & Med $5\times 5$ & 30.6926 $\pm$ 0.0124 & 0.79309 $\pm$ 0.00037 & 55.44 $\pm$ 0.16 & 3.226 (0.542) \\
+30 & G $9\times 9$, $\sigma_f=1.5$ & 29.4227 $\pm$ 0.0033 & 0.79417 $\pm$ 0.00018 & 74.27 $\pm$ 0.06 & 3.045 (0.677) \\
+30 & M $5\times 5$ & 28.9585 $\pm$ 0.0025 & 0.75971 $\pm$ 0.00012 & 82.65 $\pm$ 0.05 & 0.540 (0.032) \\
+30 & Med $7\times 7$ & 29.0048 $\pm$ 0.0118 & 0.77319 $\pm$ 0.00042 & 81.77 $\pm$ 0.22 & 60.777 (3.619) \\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{2pt}
+\caption{Salt-and-pepper denoising comparison. Quality is mean $\pm$ sample standard deviation; time is median (IQR), in milliseconds. The filter sigma is $\sigma_f$.}
+\label{tab:a-impulse}
+\begin{tabular}{llrrrr}
+\toprule
+\multicolumn{1}{c}{Density} & \multicolumn{1}{c}{Filter} & \multicolumn{1}{c}{PSNR (dB)} & \multicolumn{1}{c}{SSIM} & \multicolumn{1}{c}{MSE} & \multicolumn{1}{c}{Time (ms)} \\
+\midrule
+1\% & G $5\times 5$, $\sigma_f=1.0$ & 32.6387 $\pm$ 0.0243 & 0.87682 $\pm$ 0.00011 & 35.42 $\pm$ 0.20 & 1.149 (0.470) \\
+1\% & M $3\times 3$ & 32.1472 $\pm$ 0.0257 & 0.85450 $\pm$ 0.00016 & 39.66 $\pm$ 0.24 & 0.417 (0.038) \\
+1\% & Med $3\times 3$ & 38.2479 $\pm$ 0.0093 & 0.96514 $\pm$ 0.00002 & 9.73 $\pm$ 0.02 & 0.324 (0.024) \\
+3\% & G $7\times 7$, $\sigma_f=1.4$ & 30.1131 $\pm$ 0.0131 & 0.81756 $\pm$ 0.00053 & 63.35 $\pm$ 0.19 & 2.725 (1.215) \\
+3\% & M $5\times 5$ & 29.5823 $\pm$ 0.0088 & 0.80084 $\pm$ 0.00046 & 71.59 $\pm$ 0.14 & 0.628 (0.908) \\
+3\% & Med $3\times 3$ & 37.8470 $\pm$ 0.0330 & 0.96393 $\pm$ 0.00006 & 10.68 $\pm$ 0.08 & 0.449 (0.347) \\
+5\% & G $11\times 11$, $\sigma_f=1.6$ & 28.7862 $\pm$ 0.0185 & 0.79405 $\pm$ 0.00008 & 85.99 $\pm$ 0.37 & 4.042 (1.001) \\
+5\% & M $5\times 5$ & 28.3379 $\pm$ 0.0179 & 0.74163 $\pm$ 0.00012 & 95.34 $\pm$ 0.39 & 0.683 (0.194) \\
+5\% & Med $3\times 3$ & 37.4485 $\pm$ 0.0597 & 0.96265 $\pm$ 0.00003 & 11.70 $\pm$ 0.16 & 0.437 (0.166) \\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\textwidth,trim=0 15pt 0 90pt,clip]{../results/part_a/official/20261019T024705Z_aef5c7be/figures/gaussian_grid.pdf}
+\caption{Gaussian noise $\sigma_n=20$, seed 42. Rows compare the selected mean, Gaussian, and median denoisers. Columns show original, noisy, denoised, and sharpened images. The fourth column uses illustrative Laplacian $k=3$, $\alpha=0.1$; the selected chains in Table~\ref{tab:a-chains} use separately selected parameters.}
+\label{fig:a-gaussian-grid}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\textwidth,trim=0 15pt 0 90pt,clip]{../results/part_a/official/20261019T024705Z_aef5c7be/figures/salt_pepper_grid.pdf}
+\caption{Salt-and-pepper noise $p=3\%$, seed 42, with the same column order and illustrative sharpening parameters as Figure~\ref{fig:a-gaussian-grid}.}
+\label{fig:a-impulse-grid}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.68\textwidth,trim=0 0 0 55pt,clip]{../results/part_a/official/20261019T024705Z_aef5c7be/figures/gaussian_sensitivity.pdf}
+\caption{Kernel sensitivity and quality/runtime trade-offs at Gaussian noise $\sigma_n=20$. Quality averages the three seeds; time is the pooled median.}
+\label{fig:a-sensitivity}
+\end{figure}
+
+\textbf{Selected denoising--sharpening chains.}\par
+Table~\ref{tab:a-chains} lists the highest mean PSNR at each noise level, selected from the measured denoised outputs and complete sharpening chains. Direct controls are excluded from this selection. The accompanying results package maps each selected configuration to its seed-42 output image and checksum.
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{2.5pt}
+\caption{Selected complete chains. G denotes Gaussian noise (level $\sigma_n$); SP denotes impulse density. Filter sizes are square; Gaussian settings show kernel width / $\sigma_f$. $L$ is the Laplacian aperture. Quality is mean $\pm$ sample standard deviation; time is median (IQR).}
+\label{tab:a-chains}
+\begin{tabular}{lllrrrr}
+\toprule
+\multicolumn{1}{c}{Noise} & \multicolumn{1}{c}{Denoiser} & \multicolumn{1}{c}{$L;\alpha$} & \multicolumn{1}{c}{PSNR (dB)} & \multicolumn{1}{c}{SSIM} & \multicolumn{1}{c}{MSE} & \multicolumn{1}{c}{Time (ms)} \\
+\midrule
+G10 & Gauss 5/.8 & 7; 0.1 & 34.4378 $\pm$ 0.0015 & 0.87848 $\pm$ 0.00002 & 23.40 $\pm$ 0.01 & 11.814 (1.477) \\
+G20 & Gauss 7/1.2 & 7; 0.1 & 31.3128 $\pm$ 0.0087 & 0.82536 $\pm$ 0.00014 & 48.06 $\pm$ 0.10 & 12.552 (1.664) \\
+G30 & Gauss 9/1.5 & 7; 0.1 & 29.4742 $\pm$ 0.0035 & 0.79435 $\pm$ 0.00017 & 73.39 $\pm$ 0.06 & 12.570 (1.028) \\
+SP 1\% & Med 3 & 5; 0.25 & 38.7671 $\pm$ 0.0048 & 0.96794 $\pm$ 0.00002 & 8.64 $\pm$ 0.01 & 9.217 (0.772) \\
+SP 3\% & Med 3 & 5; 0.25 & 38.2426 $\pm$ 0.0459 & 0.96655 $\pm$ 0.00006 & 9.75 $\pm$ 0.10 & 12.210 (4.236) \\
+SP 5\% & Med 3 & 5; 0.2 & 37.7493 $\pm$ 0.0626 & 0.96474 $\pm$ 0.00004 & 10.92 $\pm$ 0.16 & 12.355 (2.826) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The selected chains improve PSNR over their denoised inputs by 0.1423, 0.0809, and 0.0515 dB for Gaussian $\sigma_n=10,20,30$, and by 0.5192, 0.3956, and 0.3009 dB for impulse densities 1\%, 3\%, and 5\%. Gaussian-noise improvements are modest relative to the added cost: at $\sigma_n=20$, the selected denoiser takes 2.456 ms, compared with 12.552 ms for the complete chain. Denoising alone is a reasonable choice when processing speed matters more than this small fidelity gain.
+
+\subsection{Comparative Analysis}
+
+\textbf{Noise removal and edge preservation.}\par
+Gaussian filtering gives the highest selected denoising PSNR at all three Gaussian noise levels. At $\sigma_n=20$, Gaussian $7\times7$, $\sigma_f=1.2$ reaches 31.2319 dB, compared with 30.4018 dB for mean $5\times5$ and 30.6926 dB for median $5\times5$. Mean filtering is faster but its equal weighting blurs fine gravel and leaf tips. The PSNR-selected Gaussian setting does not maximize every metric: mean $5\times5$ gives higher SSIM at this level, 0.83307 versus 0.82511.
+
+Median $3\times3$ has the highest selected PSNR and SSIM at every tested impulse density. At 3\%, it increases PSNR from 20.2892 to 37.8470 dB and SSIM from 0.44027 to 0.96393. Its median runtime is 0.449 ms, compared with 2.725 ms for the selected Gaussian filter. Median filtering rejects sparse extrema without spreading them across the neighbourhood. Larger median kernels remove small gravel structures and are unnecessary at these tested densities. Runtime also depends strongly on aperture: the selected median $7\times7$ at Gaussian $\sigma_n=30$ takes 60.777 ms, compared with 3.045 ms for Gaussian $9\times9$, $\sigma_f=1.5$.
+
+\textbf{Smooth regions, texture, and the optimization objective.}\par
+Three fixed diagnostic regions cover the pot surface, leaf boundaries, and gravel (Figure~\ref{fig:a-rois}). They use the same coordinates for every method and are not alternative experiment inputs. Whole-image metrics remain the primary selection criterion. The pot surface makes residual grain visible, leaf boundaries expose blur and contrast changes, and gravel exposes fine-texture loss.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.54\textwidth,trim=0 70pt 0 58pt,clip]{../results/part_a/official/20261019T024705Z_aef5c7be/figures/reference_rois.pdf}
+\caption{Reference image and the three fixed diagnostic regions. The experiment reference remains uncropped.}
+\label{fig:a-rois}
+\end{figure}
+
+At Gaussian $\sigma_n=20$, the highest whole-image denoising SSIM in the final grid is obtained by Gaussian $11\times11$, $\sigma_f=1.6$: SSIM 0.86334 and PSNR 30.7340 dB. The PSNR-selected $7\times7$, $\sigma_f=1.2$ instead gives SSIM 0.82511 and PSNR 31.2319 dB. Table~\ref{tab:a-roi} compares their regional scores for seed 42 only.
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\caption{Regional quality for seed 42 only. PSNR choice: Gaussian $7\times7$, $\sigma_f=1.2$; SSIM choice: Gaussian $11\times11$, $\sigma_f=1.6$. These are not three-seed means.}
+\label{tab:a-roi}
+\begin{tabular}{llrr}
+\toprule
+\multicolumn{1}{c}{Selection} & \multicolumn{1}{c}{Region} & \multicolumn{1}{c}{PSNR (dB)} & \multicolumn{1}{c}{SSIM} \\
+\midrule
+PSNR & Pot surface & 34.4065 & 0.80543 \\
+PSNR & Leaf edges & 30.2437 & 0.83638 \\
+PSNR & Gravel & 27.4009 & 0.83000 \\
+SSIM & Pot surface & 36.6267 & 0.89023 \\
+SSIM & Leaf edges & 29.3627 & 0.83990 \\
+SSIM & Gravel & 25.8209 & 0.78849 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Broader Gaussian smoothing raises pot-surface PSNR from 34.4065 to 36.6267 dB, while reducing gravel PSNR from 27.4009 to 25.8209 dB and gravel SSIM from 0.83000 to 0.78849. Better smooth-region scores can therefore accompany damaged texture. Leaf SSIM is slightly higher with broader smoothing, so neither setting dominates every regional metric. The PSNR choice retains more gravel fidelity, although residual Gaussian grain remains visible.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth,trim=0 35pt 0 65pt,clip]{../results/part_a/official/20261019T024705Z_aef5c7be/figures/gaussian_kernel_comparison_gravel.pdf}
+\caption{Mean $3\times3$ versus $11\times11$ in the gravel region at Gaussian $\sigma_n=20$, seed 42. The broader kernel merges fine structures and softens nearby boundaries; the notebook compares all five kernel sizes.}
+\label{fig:a-kernel}
+\end{figure}
+
+\textbf{Sharpening and failure cases.}\par
+Sharpening does not consistently improve reference fidelity. At Gaussian $\sigma_n=20$, the illustrative Laplacian $k=3$, $\alpha=0.1$ after the selected Gaussian denoiser changes PSNR from 31.2319 to 31.2305 dB and reduces SSIM from 0.82511 to 0.81441. The selected $k=7$, $\alpha=0.1$ chain performs better, showing that aperture and strength must be assessed together.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.64\textwidth,trim=0 80pt 0 75pt,clip]{../results/part_a/official/20261019T024705Z_aef5c7be/figures/gaussian_sharpening_comparison_leaf_edges.pdf}
+\caption{Mean $5\times5$ followed by Laplacian $k=3$ with increasing $\alpha$, at Gaussian $\sigma_n=20$, seed 42. Stronger sharpening increases residual variation and local edge contrast.}
+\label{fig:a-sharpening}
+\end{figure}
+
+Stronger enhancement makes leaf boundaries harsher and amplifies residual variation. Light/dark overshoot is a halo risk, but these crops do not establish repeated oscillatory ringing. Increased boundary contrast should therefore be compared with the reference rather than automatically interpreted as recovered detail.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.44\textheight,trim=0 25pt 0 75pt,clip,keepaspectratio]{../results/part_a/official/20261019T024705Z_aef5c7be/figures/gaussian_sharpening_direct.pdf}
+\caption{Direct Laplacian sharpening of Gaussian-corrupted input at $\sigma_n=20$, seed 42. Panels read left to right, top to bottom; labels identify the measured settings.}
+\label{fig:a-direct}
+\end{figure}
+
+Applying Laplacian $k=3$, $\alpha=0.5$ directly to the noisy image reduces whole-image PSNR from 22.3294 to 16.4111 dB and SSIM from 0.28528 to 0.13111. This failure supports denoising before enhancement. The accompanying results include direct-sharpening measurements for both noise types, all three apertures, and both tested strengths.
+
+\textbf{Scope and limitations.}\par
+Parameters are selected and evaluated using the same reference image and three seeds. The choices describe the best measured configurations for this image and objective; they do not establish performance on unseen photographs. In the broader search, Gaussian $9\times9$, $\sigma_f=1.5$ and $7\times7$, $\sigma_f=1.6$ differ by only about 0.0023 dB at $\sigma_n=30$, so the selected aperture does not imply a substantial perceptual advantage. Resizing and the large smooth background influence the measured trade-offs. Runtime belongs to the recorded environment and includes validation and conversion overhead. Additional images and independent evaluation seeds would help assess generalization.
+
+\clearpage
+\section{Part B: 3D Reconstruction}
+\label{sec:part-b}
+\subsection{Methodology}
+
+\subsubsection{Input pair and processing workflow}
+The experiment uses the Venus sequence from the Middlebury Optical Flow dataset. The left/reference image is \texttt{frame10.png}; the right/target image is \texttt{frame11.png}. Both are RGB images of size $420\times380$. They are exact crops of the corresponding rectified Venus stereo views: the left crop starts at $(10,0)$ and the right crop at $(0,0)$ in the $434\times383$ source images. No additional resizing or warping is applied. The accompanying \texttt{flow10.flo} field has zero vertical displacement over all $159{,}600$ pixels. For this verified horizontally rectified pair, its horizontal component gives disparity ground truth as $d_{\mathrm{GT}}=-u$, where $u$ is horizontal optical flow. This conversion is specific to the documented pair; an optical-flow file does not generally represent stereo disparity.\footnote{Middlebury, \emph{Optical Flow: Other Datasets}, \url{https://vision.middlebury.edu/flow/data/}. The source stereo views and crop coordinates were checked against the Venus archive at \url{https://vision.middlebury.edu/stereo/data/scenes2001/data/venus/venus.zip}.}
+
+\begin{center}
+\small
+\fbox{Rectified Venus pair and flow-derived disparity}\\[3pt]
+$\downarrow$\\[3pt]
+\fbox{SIFT correspondences and RANSAC fundamental matrix}\\[3pt]
+$\downarrow$\\[3pt]
+\fbox{BM and SGBM parameter comparisons}\\[3pt]
+$\downarrow$\\[3pt]
+\fbox{Left--right consistency, GT metrics, and assumed-model reprojection}
+\end{center}
+
+\subsubsection{Sparse geometry}
+SIFT detects up to 5,000 features in each image. Brute-force L2 matching retrieves the two nearest neighbours for each query descriptor; a match is retained when $d_1<0.75d_2$. The resulting correspondences estimate a $3\times3$ fundamental matrix $F$ with USAC\_MAGSAC, confidence $0.999$, at most 5,000 iterations, and pixel thresholds of $0.5$, $1$, and $2$. The native USAC random state is zero; the project seed is 42. Ground-truth flow is used only for independent diagnostics and disparity evaluation, not to estimate $F$.\footnote{OpenCV, \emph{USAC: Universal RANSAC}, \url{https://docs.opencv.org/4.x/de/d3e/tutorial_usac.html}; OpenCV, \emph{Camera Calibration and 3D Reconstruction}, \url{https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html}.}
+
+For homogeneous image points $\mathbf{x}_L$ and $\mathbf{x}_R$, corresponding points satisfy
+\begin{equation}
+\mathbf{x}_R^{\mathsf T}F\mathbf{x}_L=0,\qquad
+\boldsymbol{\ell}_R=F\mathbf{x}_L,\quad
+\boldsymbol{\ell}_L=F^{\mathsf T}\mathbf{x}_R.
+\end{equation}
+The reported symmetric point-to-line error is the mean of the distances in the two images,
+\begin{equation}
+e_{\mathrm{epi}}=\frac{|\mathbf{x}_R^{\mathsf T}F\mathbf{x}_L|}{2}
+\left(\frac{1}{\sqrt{\ell_{R,1}^2+\ell_{R,2}^2}}+
+\frac{1}{\sqrt{\ell_{L,1}^2+\ell_{L,2}^2}}\right).
+\end{equation}
+The Sampson distance is also computed as a first-order geometric approximation. Epipolar lines are drawn in both views for visual inspection. The estimated matrices and inlier masks are retained with the experiment outputs.
+
+\subsubsection{Dense disparity and 3D reprojection}
+Block Matching (BM) and Semi-Global Block Matching (SGBM) are evaluated with $\texttt{numDisparities}\in\{32,64\}$, $\texttt{blockSize}\in\{5,9,15\}$, and $\texttt{minDisparity}=-16$. BM uses an XSobel prefilter; SGBM uses the three-way mode with $P_1=8b^2$ and $P_2=32b^2$, where $b$ is the block size. Both use a uniqueness ratio of 10. OpenCV returns fixed-point disparities at 1/16-pixel precision, so each map is divided by 16 before comparison or reprojection. A right-to-left match check retains pixels whose disparity disagreement is at most 1 pixel.\footnote{OpenCV stereo matching API: \url{https://docs.opencv.org/5.0/main_modules/stereo.html}. For a review of dense two-frame stereo methods, see D. Scharstein and R. Szeliski, “A Taxonomy and Evaluation of Dense Two-Frame Stereo Correspondence Algorithms,” \emph{International Journal of Computer Vision}, vol. 47, pp. 7--42, 2002, \url{https://vision.middlebury.edu/stereo/taxonomy-IJCV.pdf}.}
+
+For a calibrated rectified pair, depth is related to disparity by
+\begin{equation}
+Z=\frac{fB}{d+d_{\mathrm{offs}}},\qquad
+X=\frac{(x-c_{x,L})B}{d+d_{\mathrm{offs}}},\qquad
+Y=\frac{(y-c_y)B}{d+d_{\mathrm{offs}}},
+\label{eq:b-reprojection}
+\end{equation}
+where $f$ is focal length, $B$ is baseline, and $d_{\mathrm{offs}}=c_{x,R}-c_{x,L}$. No measured calibration was available. The point clouds therefore use an explicitly assumed pinhole model: a $30^\circ$ horizontal field of view on the source frame, square pixels, zero skew, parallel axes, centered source principal points, and normalized baseline $B=1$. This gives $f=434/(2\tan15^\circ)=809.855$ pixels, cropped principal points $(206.5,191)$ and $(216.5,191)$, and $d_{\mathrm{offs}}=10$ pixels. The resulting coordinates are in normalized-baseline units and do not establish physical depth accuracy. The field-of-view choice follows Basha et al.; the remaining camera parameters are project assumptions.\footnote{T. Basha, Y. Moses, and N. Kiryati, “Multi-view Scene Flow Estimation: A View Centered Variational Approach,” \emph{International Journal of Computer Vision}, vol. 101, pp. 6--21, 2013, Sec. 4.1, \url{https://doi.org/10.1007/s11263-012-0542-7}.}
+
+\subsection{Implementation and Results}
+
+\subsubsection{Dataset, environment, and evaluation}
+The input files, source metadata, and result artifacts are recorded in the completed run \texttt{20261019T103316Z\_9fe8bb55}. The evaluation domain contains $157{,}906$ GT-valid pixels whose flow target remains inside the right image; valid-disparity ratios use all $159{,}600$ image pixels. RMSE and bad-pixel rate are conditional on the intersection of the GT domain and the left--right-consistent prediction mask. A bad pixel has absolute disparity error greater than 1 pixel. No occlusion ground-truth mask is available, so left--right consistency is a reliability estimate rather than an occlusion label.
+
+For prediction $d$ and ground truth $d_{\mathrm{GT}}$, the reported quantities are
+\begin{equation}
+\mathrm{ValidRatio}=100\frac{N_{\mathrm{LR}}}{WH},\quad
+\mathrm{RMSE}=\sqrt{\frac{1}{N}\sum_{i\in\mathcal{E}}(d_i-d_{\mathrm{GT},i})^2},\quad
+\mathrm{BadRate}=100\frac{N_{\mathrm{bad}}}{N},
+\end{equation}
+where $\mathcal{E}$ is the prediction-valid intersection with the GT evaluation domain, $N=|\mathcal{E}|$, and $N_{\mathrm{bad}}$ counts errors greater than 1 pixel. Coverage in Table~\ref{tab:b-dense} is $100N/157{,}906$; it is distinct from the all-image valid ratio. Each dense configuration has three warm-ups and 20 timed repetitions. OpenCV 5.0.0 ran with one thread and OpenCL disabled; the environment used Python 3.13.14 and NumPy 2.5.4. The reported median time includes matcher construction, both matching directions, disparity conversion, and consistency checking; it excludes file I/O, metric computation, figures, and 3D reprojection.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\textwidth]{../results/part_b/20261019T103316Z_9fe8bb55/figures/input_and_ground_truth.png}
+\caption{Venus stereo pair and flow-derived disparity. The disparity display is clipped to $[-10,10]$ pixels for visualization; the original flow values are used for evaluation.}
+\label{fig:b-input}
+\end{figure}
+
+\subsubsection{Fundamental matrix and epipolar geometry}
+The detector returned 629 left and 567 right keypoints. KNN produced 629 candidate pairs; 411 passed the ratio test. Table~\ref{tab:b-geometry} reports all three RANSAC thresholds. As the threshold increases, more matches are retained as inliers, while the mean error among those inliers also increases. Independent GT-domain checks yield mean symmetric epipolar errors close to 0.11 pixels. The 95th-percentile absolute epipolar-line angle is below $2^\circ$ in both views for every estimate, a project diagnostic for this rectified pair rather than a grading threshold.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption{Sparse geometry results. Each estimate uses the same 411 ratio-test matches. GT-domain error is evaluated independently on the 157,906 flow-derived correspondences.}
+\label{tab:b-geometry}
+\begin{tabular}{rrrrr}
+\toprule
+\multicolumn{1}{c}{Threshold (px)} & \multicolumn{1}{c}{Inliers} & \multicolumn{1}{c}{Inlier ratio (\%)} & \multicolumn{1}{c}{Inlier epi. mean (px)} & \multicolumn{1}{c}{GT-domain epi. mean (px)} \\
+\midrule
+0.5 & 378 & 91.97 & 0.0921 & 0.1150 \\
+1.0 & 385 & 93.67 & 0.1049 & 0.1124 \\
+2.0 & 392 & 95.38 & 0.1392 & 0.1150 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Feature detection and matching took 120.743 ms in a single measurement; the three RANSAC fits took 8.828, 3.704, and 3.083 ms at thresholds 0.5, 1, and 2 pixels, respectively. These sparse-stage timings are single samples and are separate from the repeated dense-matching measurements.
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}{0.48\textwidth}
+  \includegraphics[width=\linewidth]{../results/part_b/20261019T103316Z_9fe8bb55/figures/initial_matches.png}
+  \caption{Initial descriptor matches.}
+\end{subfigure}\hfill
+\begin{subfigure}{0.48\textwidth}
+  \includegraphics[width=\linewidth]{../results/part_b/20261019T103316Z_9fe8bb55/figures/inlier_matches.png}
+  \caption{RANSAC inliers.}
+\end{subfigure}
+\caption{SIFT correspondences before and after robust fundamental-matrix estimation.}
+\label{fig:b-matches}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\textwidth]{../results/part_b/20261019T103316Z_9fe8bb55/figures/ransac_t0p5_epipolar.png}
+\caption{Epipolar lines generated by the $0.5$-pixel USAC\_MAGSAC estimate, shown in both images. Its independent GT-domain mean symmetric epipolar error is 0.115 pixels.}
+\label{fig:b-epipolar}
+\end{figure}
+
+\subsubsection{Dense matching results}
+Table~\ref{tab:b-dense} summarizes all 12 configurations. SGBM provides greater valid coverage and lower conditional error than BM for each tested parameter pair, at a higher measured runtime. Figure~\ref{fig:b-bm} and Figure~\ref{fig:b-sgbm} show the left--right-consistent maps. Gray regions are invalid; the color display saturates outside $[-10,10]$ pixels, while the saved floating-point disparities remain unchanged.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{Dense disparity comparison. LR-valid ratio is over all image pixels; coverage, RMSE, and bad-pixel rate use the GT-domain intersection with LR-consistent predictions. Runtime is the median of 20 repetitions in milliseconds.}
+\label{tab:b-dense}
+\begin{tabular}{lrrrrr}
+\toprule
+\shortstack{Method / $n_{\mathrm{disp}}$\\block} & \multicolumn{1}{c}{LR-valid ratio (\%)} & \multicolumn{1}{c}{Coverage (\%)} & \multicolumn{1}{c}{RMSE (px)} & \multicolumn{1}{c}{Bad $>1$ px (\%)} & \multicolumn{1}{c}{Median (ms)} \\
+\midrule
+BM / 32 / 5  & 68.483 & 69.218 & 1.7335 & 5.101 & 15.942 \\
+BM / 32 / 9  & 78.730 & 79.575 & 0.8964 & 2.929 & 16.663 \\
+BM / 32 / 15 & 82.562 & 83.448 & 0.8116 & 3.322 & 32.676 \\
+BM / 64 / 5  & 53.749 & 54.325 & 3.6564 & 5.682 & 36.027 \\
+BM / 64 / 9  & 64.126 & 64.814 & 1.0868 & 3.280 & 18.381 \\
+BM / 64 / 15 & 68.690 & 69.427 & 0.8509 & 3.733 & 18.003 \\
+SGBM / 32 / 5  & 90.510 & 91.481 & 0.5341 & 1.521 & 27.308 \\
+SGBM / 32 / 9  & 90.532 & 91.503 & 0.6109 & 2.011 & 27.725 \\
+SGBM / 32 / 15 & 90.538 & 91.510 & 0.7162 & 2.851 & 49.016 \\
+SGBM / 64 / 5  & 76.409 & 77.228 & 0.5538 & 1.697 & 67.800 \\
+SGBM / 64 / 9  & 76.415 & 77.235 & 0.6341 & 2.266 & 61.293 \\
+SGBM / 64 / 15 & 76.445 & 77.266 & 0.7458 & 3.236 & 68.425 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\textwidth]{../results/part_b/20261019T103316Z_9fe8bb55/figures/bm_disparity_grid.png}
+\caption{BM left--right-consistent disparity maps for the six tested combinations of disparity range and block size.}
+\label{fig:b-bm}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\textwidth]{../results/part_b/20261019T103316Z_9fe8bb55/figures/sgbm_disparity_grid.png}
+\caption{SGBM left--right-consistent disparity maps for the six tested combinations of disparity range and block size.}
+\label{fig:b-sgbm}
+\end{figure}
+
+\subsubsection{Point-cloud reconstruction}
+For a direct point-cloud comparison, BM and SGBM use $\texttt{numDisparities}=32$ and $\texttt{blockSize}=9$. Reprojection keeps LR-consistent pixels with a positive denominator and finite positive depth. A connected-component filter removes disparity components of at most 100 pixels when adjacent disparity differences are at most 1 pixel; it does not use the GT. The BM cloud contains 125,575 raw points, of which 980 are removed, leaving 124,595. The SGBM cloud contains 144,489 points and the filter removes none. Figure~\ref{fig:b-cloud} shows the filtered SGBM cloud from three viewpoints; the full point sets are retained in the result artifacts.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\textwidth]{../results/part_b/20261019T103316Z_9fe8bb55/figures/sgbm_n32_b9_point_cloud_filtered.png}
+\caption{SGBM point cloud for $n_{\mathrm{disp}}=32$, block size 9, shown from three viewpoints. Axes are in normalized-baseline units under the assumed camera model; the plot samples points for display, while the complete cloud is preserved.}
+\label{fig:b-cloud}
+\end{figure}
+
+\subsection{Comparative Analysis}
+
+\subsubsection{Accuracy, coverage, and runtime}
+SGBM's advantage is consistent across the tested grid: its best RMSE is 0.5341 pixels at $n_{\mathrm{disp}}=32$, block size 5, compared with the best BM RMSE of 0.8116 pixels at $n_{\mathrm{disp}}=32$, block size 15. SGBM also has the lower bad-pixel rate in each paired setting. At $n_{\mathrm{disp}}=32$, its LR-valid ratio is about 90.5\%, compared with 68.5--82.6\% for BM. The difference remains when both methods are evaluated on exactly the same pixels at block size 9: RMSE is 0.5959 pixels for SGBM and 0.8792 pixels for BM; bad-pixel rates are 1.93\% and 2.74\%, respectively, over the common 125,276-pixel domain. Thus the lower SGBM error is not explained solely by its larger valid region.
+
+This accuracy and coverage come with greater cost in this run. The fastest SGBM case takes 27.308 ms, while the fastest BM case takes 15.942 ms under the same timing protocol. Increasing the disparity range to 64 reduces coverage in both methods for this pair and gives no better RMSE than the best 32-disparity setting. Within SGBM, larger blocks slightly increase coverage but also raise RMSE and bad-pixel rate. BM block size 15 gives the lowest RMSE among BM cases, but its bad-pixel rate is higher than BM at block size 9. These measurements support a trade-off rather than one parameter setting that optimizes every metric.
+
+\subsubsection{Visual quality and limitations}
+The disparity grids show BM's block- and range-dependent invalid areas and speckled responses, especially with a 5-pixel block. Larger BM blocks produce more continuous regions but smooth local variation. SGBM maps are more spatially regular and preserve higher valid coverage, although boundaries are softened and invalid strips remain near some occlusions and image borders. These observations describe the displayed Venus pair; no occlusion ground truth is available to classify every invalid or mismatched pixel.
+
+With assumed focal length, principal points, crop offset, and $B=1$, these clouds show qualitative normalized depth. Measured camera calibration remains unavailable, so calibrated 3D reconstruction and physical depth accuracy remain unverified. The point-cloud demonstration does not establish completion of the calibrated-reconstruction requirement. Runtimes apply only to this recorded environment.
+
+\clearpage
+
+\section{Part C: Image Stitching}
+\label{sec:part-c}
+
+\subsection{Methodology}
+
+\subsubsection{Image sequence and coordinate frame}
+The experiment uses four ordered, overlapping 1920$\times$1080 PNG images of the interior of Chua Minh Thanh, photographed by the student during a trip to Gia Lai. The input files are \texttt{pagoda\_01.png} through \texttt{pagoda\_04.png}; image 3 defines the common coordinate frame. Images 1, 2, and 4 are each mapped directly to image 3, while image 3 uses the identity transform. The inputs are not resized, cropped, or rectified. The run snapshot preserves the source images and their SHA-256 checksums. Figure~\ref{fig:c-pipeline} summarizes the stitching and evaluation stages.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  process/.style={draw=black!65, rounded corners=2pt, fill=blue!4,
+    text width=0.82\textwidth, align=center, inner sep=4pt, font=\small},
+  flow/.style={-{Stealth[length=2mm]}, semithick, draw=black!65},
+  node distance=3mm
+]
+\node[process] (input) {\textbf{Input}\ Four ordered, overlapping images; image 3 is the anchor};
+\node[process, below=of input] (features) {\textbf{Feature extraction}\ SIFT, ORB, or AKAZE descriptors};
+\node[process, below=of features] (matching) {\textbf{Correspondence matching}\ Brute-force KNN and Lowe's ratio test};
+\node[process, below=of matching] (geometry) {\textbf{Geometric estimation}\ RANSAC homographies $H_{1\to3}$, $H_{2\to3}$, and $H_{4\to3}$};
+\node[process, below=of geometry] (render) {\textbf{Panorama construction}\ Warp to a common canvas and blend with distance-transform feathering};
+\node[process, below=of render] (evaluation) {\textbf{Evaluation outputs}\ Panorama; keypoints, matches, inliers, reprojection RMSE, and runtime};
+\draw[flow] (input) -- (features);
+\draw[flow] (features) -- (matching);
+\draw[flow] (matching) -- (geometry);
+\draw[flow] (geometry) -- (render);
+\draw[flow] (render) -- (evaluation);
+\end{tikzpicture}
+\caption{Part C pipeline from the ordered image set to panorama construction and comparative evaluation.}
+\label{fig:c-pipeline}
+\end{figure}
+
+\subsubsection{Features, matching, and homography}
+The experiment compares SIFT, ORB, and AKAZE using OpenCV. SIFT uses up to 5,000 features and the L2 descriptor distance. ORB uses up to 5,000 features, \texttt{WTA\_K=2}, and Hamming distance. AKAZE uses the oriented MLDB descriptor, threshold 0.001, and a limit of 5,000 features, with Hamming distance. If a detector returns more than the limit, features are stably sorted by response and the corresponding descriptor rows are retained in the same order. Feature extraction runs on grayscale images; geometric warping uses the original colour images.
+
+For each source image and image 3, a brute-force matcher requests the two nearest neighbours, $d_1$ and $d_2$. A match passes Lowe's ratio test when
+\begin{equation}
+d_1 < r d_2,
+\end{equation}
+where $r\in\{0.72,0.75,0.78\}$. The initial-match count is the number of KNN rows with both neighbours, before applying this test. Descriptor distance is L2 for SIFT and Hamming for ORB and AKAZE.
+
+For each source-to-anchor pair, RANSAC estimates a homography with confidence 0.995, at most 5,000 iterations, and reprojection threshold $\tau\in\{3,4,5,6\}$ pixels:
+\begin{equation}
+\lambda\begin{bmatrix}u'\\v'\\1\end{bmatrix}
+=H_{i\rightarrow3}\begin{bmatrix}u\\v\\1\end{bmatrix},
+\qquad (u',v')=\left(\frac{q_1}{q_3},\frac{q_2}{q_3}\right),
+\end{equation}
+where $q=H_{i\rightarrow3}[u,v,1]^T$ and $\lambda=q_3$. The pipeline checks that point sets are non-collinear, the estimated matrix is finite and full rank, at least four inliers remain, and the projected image does not cross a projective horizon. It also checks that the common canvas is finite and contains no more than 40 million pixels. Failed configurations retain their status and reason.
+
+\subsubsection{Warping, blending, and evaluation}
+The main comparison warps all four images into the image-3 frame and uses distance-transform feather weights. Each source colour is multiplied by its weight before warping; the weighted colours and weights are accumulated separately:
+\begin{equation}
+P(x,y)=\frac{\sum_i \mathcal{W}_i[w_i I_i](x,y)}
+{\sum_i \mathcal{W}_i[w_i](x,y)},
+\end{equation}
+where $\mathcal{W}_i$ warps a source array into the common canvas and $w_i$ is its source feather weight. Both the premultiplied colour $w_i I_i$ and the weight $w_i$ are warped before accumulation; division is evaluated only on valid support. The support mask comes from the weights, so black image content is not mistaken for an empty region. The output is cropped to the rectangular extent of valid support; unsupported corners within the rectangle remain masked.
+
+Initial matches are counted before the ratio test. The inlier ratio uses all ratio-pass correspondences across the three pairs as its denominator. For pair $p$, let $n_p$ be the RANSAC inlier count and $S_p$ the sum of squared forward reprojection errors from source to image 3. The pooled measures are
+\begin{equation}
+\mathrm{InlierRatio}=100\frac{\sum_p n_p}{\sum_p M_p},
+\qquad
+\mathrm{RMSE}=\sqrt{\frac{\sum_p S_p}{\sum_p n_p}},
+\end{equation}
+where $M_p$ is the number of ratio-pass matches. RMSE is in pixels; pair RMSE values are not averaged directly. Keypoint totals count each of the four images once. Convex-hull coverage is reported as a spatial-support diagnostic, not as ground-truth alignment accuracy.
+
+Each selected or baseline pipeline is measured after one warm-up and five full repetitions, with extraction and matching repeated each time. Total stitching time runs from detector creation and grayscale conversion through the cropped panorama; it excludes file I/O, metric calculation, and figure generation. The reported value is the median and IQR of five samples. OpenCV runs single-threaded with OpenCL disabled. A separate comparison holds homographies fixed and measures canvas setup, warp, blending, and crop for feathering and multi-band blending with 3, 5, and 7 bands. These stage-only timings are not added to or subtracted from the full-pipeline timings.
+
+\subsection{Implementation and Results}
+
+\subsubsection{Environment and parameter grid}
+The pipeline uses OpenCV for feature detection, descriptor matching, homography estimation, warping, and blending. Measurements were collected with Python 3.13.14, NumPy 2.5.4, OpenCV 5.0.0 from opencv-contrib-python-headless 5.0.0.93, and Matplotlib 3.11.2 on Linux x86\_64. The accompanying reproducibility package preserves the inputs, configurations, source snapshot, homographies, masks, timings, and output checksums. The experiment tested all 12 combinations of three Lowe ratios and four RANSAC thresholds for each detector, giving 36 configurations in total. Every configuration produced a panorama, and all 108 pair records passed validation. The selected settings were reviewed visually within this image sequence and parameter grid; they are not asserted to be universal optima.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Detected and retained features per image. Each detector uses at most 5,000 features; SIFT returned 5,001 on image 3 before the stable response limit.}
+\label{tab:c-keypoints}
+\begin{tabular}{lccc}
+\toprule
+Image & SIFT detected / used & ORB detected / used & AKAZE detected / used \\
+\midrule
+1 & 5,000 / 5,000 & 5,000 / 5,000 & 5,000 / 5,000 \\
+2 & 5,000 / 5,000 & 5,000 / 5,000 & 5,000 / 5,000 \\
+3 & 5,001 / 5,000 & 5,000 / 5,000 & 5,000 / 5,000 \\
+4 & 5,000 / 5,000 & 5,000 / 5,000 & 5,000 / 5,000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[t]{0.32\textwidth}
+\includegraphics[width=\linewidth]{../results/part_c/refinement/20261019T105909Z_fe7aa242/figures/sift_keypoints_3.png}
+\caption{SIFT}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.32\textwidth}
+\includegraphics[width=\linewidth]{../results/part_c/refinement/20261019T105909Z_fe7aa242/figures/orb_keypoints_3.png}
+\caption{ORB}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.32\textwidth}
+\includegraphics[width=\linewidth]{../results/part_c/refinement/20261019T105909Z_fe7aa242/figures/akaze_keypoints_3.png}
+\caption{AKAZE}
+\end{subfigure}
+\caption{Detected keypoints on image 3. The first 500 retained points are drawn for readability; counts for all four images are in Table~\ref{tab:c-keypoints}.}
+\label{fig:c-keypoints}
+\end{figure}
+
+\subsubsection{Baseline and selected comparisons}
+The common baseline is ratio 0.75 and threshold 3 px. Visual review selected SIFT 0.75/5 px, ORB 0.78/5 px, and AKAZE 0.78/5 px. Table~\ref{tab:c-main} gives the pooled counts, forward reprojection error, and repeated total pipeline time. Initial matches precede the ratio test; the ratio-pass count is shown so the inlier-ratio denominator is explicit.
+
+\begin{table}[htbp]
+\centering
+\small
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption{Baseline and selected end-to-end stitching results. B and S denote baseline and selected settings. Initial matches count complete KNN rows before Lowe's ratio test; P/R are ratio-pass matches and RANSAC inliers. Each configuration has 15,000 initial matches across the three source-to-anchor pairs. Runtime is the median (IQR) in milliseconds over five repetitions after one warm-up.}
+\label{tab:c-main}
+\begin{tabular}{llcccrrr}
+\toprule
+\multicolumn{1}{c}{Detector} & \multicolumn{1}{c}{Param.} & \multicolumn{1}{c}{Features D/U} & \multicolumn{1}{c}{Initial KNN} & \multicolumn{1}{c}{Matches P/R} & \multicolumn{1}{c}{Inlier (\%)} & \multicolumn{1}{c}{RMSE (px)} & \multicolumn{1}{c}{Time (ms)} \\
+\midrule
+SIFT & B 0.75/3 & 20,001/20,000 & 15,000 & 6,582/5,927 & 90.05 & 0.707 & 2,898.192 (66.391) \\
+SIFT & S 0.75/5 & 20,001/20,000 & 15,000 & 6,582/5,950 & 90.40 & 0.726 & 2,838.351 (163.371) \\
+ORB & B 0.75/3 & 20,000/20,000 & 15,000 & 5,828/5,332 & 91.49 & 1.215 & 975.079 (39.572) \\
+ORB & S 0.78/5 & 20,000/20,000 & 15,000 & 6,442/6,017 & 93.40 & 1.401 & 1,025.075 (69.450) \\
+AKAZE & B 0.75/3 & 20,000/20,000 & 15,000 & 6,806/6,416 & 94.27 & 0.832 & 2,114.515 (34.142) \\
+AKAZE & S 0.78/5 & 20,000/20,000 & 15,000 & 7,184/6,797 & 94.61 & 0.963 & 1,965.790 (126.001) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../results/part_c/refinement/20261019T105909Z_fe7aa242/figures/baseline_selected_panoramas.png}
+\caption{Baseline (top) and selected (bottom) feather-blended panoramas for SIFT, ORB, and AKAZE in the image-3 coordinate frame. Black regions lie outside valid image support.}
+\label{fig:c-panoramas}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{../results/part_c/refinement/20261019T105909Z_fe7aa242/figures/sift_r0p75_t5_1_to_3_initial.jpg}
+\caption{Initial SIFT KNN matches}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+\includegraphics[width=\linewidth]{../results/part_c/refinement/20261019T105909Z_fe7aa242/figures/sift_r0p75_t5_1_to_3_inlier.jpg}
+\caption{SIFT RANSAC inliers}
+\end{subfigure}
+\caption{Example initial and inlier correspondences from image 1 to image 3. Up to 80 matches are drawn for readability; full arrays, homographies, and inlier masks are retained in the run.}
+\label{fig:c-matches}
+\end{figure}
+
+The selected canvas dimensions are $3793\times1560$ for SIFT, $3779\times1554$ for ORB, and $3791\times1560$ for AKAZE. Selected pooled convex-hull support ranges from 55.52\% to 69.11\% for SIFT, 41.28\% to 44.22\% for ORB, and 53.26\% to 68.55\% for AKAZE across the source and anchor views. This diagnostic shows that the accepted points cover different spatial extents; it does not prove absolute alignment accuracy.
+
+\subsection{Comparative Analysis}
+
+\subsubsection{Parameter sensitivity and geometric stability}
+Table~\ref{tab:c-ratio-sensitivity} compares the tested Lowe-ratio endpoints at a fixed 3 px RANSAC threshold. A larger ratio admits more correspondences and inliers but lowers the accepted inlier percentage. Table~\ref{tab:c-threshold-sensitivity} compares 3 px and 6 px thresholds at ratio 0.75. Increasing the threshold accepts additional points and increases fitted RMSE. Corner deviation does not change monotonically with fitted RMSE, so the quantities describe different aspects of the fit.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Lowe-ratio endpoints at fixed RANSAC threshold 3 px. Counts pool the three source-to-anchor pairs.}
+\label{tab:c-ratio-sensitivity}
+\begin{tabular}{lrrr}
+\toprule
+\multicolumn{1}{c}{Detector} & \multicolumn{1}{c}{\shortstack{Ratio-pass\\matches}} & \multicolumn{1}{c}{Inliers} & \multicolumn{1}{c}{\shortstack{Inlier ratio\\(\%)}} \\
+\midrule
+SIFT & 6,300$\rightarrow$6,901 & 5,785$\rightarrow$6,078 & 91.83$\rightarrow$88.07 \\
+ORB & 5,339$\rightarrow$6,442 & 4,930$\rightarrow$5,741 & 92.34$\rightarrow$89.12 \\
+AKAZE & 6,484$\rightarrow$7,184 & 6,168$\rightarrow$6,692 & 95.13$\rightarrow$93.15 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{RANSAC-threshold endpoints at fixed Lowe ratio 0.75. Corner change is the maximum projected-corner deviation observed across three correspondence permutations.}
+\label{tab:c-threshold-sensitivity}
+\begin{tabular}{lrrr}
+\toprule
+\multicolumn{1}{c}{Detector} & \multicolumn{1}{c}{Inliers} & \multicolumn{1}{c}{RMSE (px)} & \multicolumn{1}{c}{Max corner change (px)} \\
+\midrule
+SIFT & 5,927$\rightarrow$5,950 & 0.707$\rightarrow$0.723 px & 4.038$\rightarrow$0.937 px \\
+ORB & 5,332$\rightarrow$5,546 & 1.215$\rightarrow$1.406 px & 20.084$\rightarrow$30.301 px \\
+AKAZE & 6,416$\rightarrow$6,537 & 0.832$\rightarrow$0.983 px & 12.224$\rightarrow$2.932 px \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\textwidth]{../results/part_c/refinement/20261019T105909Z_fe7aa242/figures/selected_crop_comparison.png}
+\caption{Fixed crops in image-3 coordinates: sign, column, lantern, and overlap detail for the selected detectors.}
+\label{fig:c-crops}
+\end{figure}
+
+The selected homographies were also refitted from saved correspondences after permutations with NumPy seeds 42, 123, and 2026. Across the three direct source-to-anchor pairs, all 108 homography-and-canvas geometry checks passed. This procedure measures fitted reprojection and projected-corner changes; it does not rerun feature extraction, matching, or blending. Maximum corner changes are 1.565 px for SIFT, 24.328 px for ORB, and 6.038 px for AKAZE. ORB is substantially more sensitive at extrapolated corners despite its high inlier ratio. SIFT gives the lowest selected pooled RMSE and smallest selected corner variation, while AKAZE retains the most selected inliers.
+
+In the inspected native sign crops, lettering and ornament remain continuous across the selected results. Feathering avoids an obvious hard seam at the central sign, while fine overlap detail softens and column ghosting remains visible. The panoramas show leaning outer columns and roof stretching from the planar projection. Bright streaks and saturated yellow highlights persist and are not recovered by changing the blend alone.
+
+\subsubsection{Feather and multi-band blending}
+A supplementary experiment holds the selected homographies, support masks, and crop fixed while comparing feathering with 3-, 5-, and 7-band multi-band blending. Table~\ref{tab:c-blending} reports stage-only timing for canvas setup, warping, blending, and cropping. Mean absolute colour change is measured from feathering on common valid support; it is descriptive and not a quality score.
+
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\caption{Fixed-homography blending comparison. Time is the median (IQR) over five repetitions after one warm-up.}
+\label{tab:c-blending}
+\begin{tabular}{llrr}
+\toprule
+Detector & Blend & Time (ms) & Mean absolute change \\
+\midrule
+SIFT & Feather & 815.838 (70.504) & 0.000 \\
+SIFT & Multi-band, 3 & 1,001.501 (67.641) & 0.662 \\
+SIFT & Multi-band, 5 & 1,028.602 (46.028) & 0.779 \\
+SIFT & Multi-band, 7 & 1,027.439 (97.292) & 1.315 \\
+ORB & Feather & 687.850 (208.455) & 0.000 \\
+ORB & Multi-band, 3 & 978.913 (58.832) & 0.738 \\
+ORB & Multi-band, 5 & 1,114.966 (43.292) & 0.854 \\
+ORB & Multi-band, 7 & 1,238.949 (51.768) & 1.390 \\
+AKAZE & Feather & 769.430 (76.210) & 0.000 \\
+AKAZE & Multi-band, 3 & 1,196.965 (92.689) & 0.659 \\
+AKAZE & Multi-band, 5 & 1,158.733 (41.575) & 0.775 \\
+AKAZE & Multi-band, 7 & 1,093.339 (145.709) & 1.312 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../results/part_c/refinement/20261019T105909Z_fe7aa242/blending/comparison_sign.png}
+\caption{Sign crops from feathering and multi-band blending at fixed homographies. The blending methods preserve similar central lettering while changing local brightness and texture.}
+\label{fig:c-blending}
+\end{figure}
+
+On the inspected sign, the blending options preserve similar lettering. SIFT 5-band blending takes 1,028.602 ms compared with 815.838 ms for feathering in the separate stage-only measurement. Seven bands produce the largest mean colour change for each detector, but neither this change nor the band count shows a quality improvement. Feathering remains the shared baseline for the detector comparison. Multi-band blending does not remove projective stretching or recover saturated detail.
+
+Overall, ORB has the lowest selected total stitching time at 1,025.075 ms, SIFT has the lowest selected pooled reprojection RMSE at 0.726 px and the smallest tested corner variation, and AKAZE retains the most selected inliers at 6,797 (94.61\%). These results show distinct speed, fit, and support trade-offs on this four-image sequence. They do not establish performance on other scenes or absolute geometric accuracy.
+
+\section{Conclusion}
+Across the tested inputs, classical methods produced clear but task-dependent results. Gaussian filtering gave the strongest PSNR for Gaussian noise, while median filtering best suppressed salt-and-pepper noise; sharpening gains were modest and parameter-sensitive. On the Venus pair, SGBM improved disparity coverage and error over BM at a higher runtime. For stitching, SIFT gave the most stable geometric fit, ORB was fastest but more sensitive at extrapolated corners, and AKAZE retained the most inliers. The reconstructed point clouds remain qualitative because the camera model is assumed.
+
+Further work should use measured stereo calibration and occlusion-aware ground truth, then evaluate additional scenes. Filtering could be tested on more reference images and noise distributions, including edge-aware methods. For stitching, exposure compensation and local or non-planar alignment may address illumination changes and perspective distortion; more sequences are needed to determine whether the observed detector trade-offs generalize.
+
+\section{References}
+\begingroup
+\small
+\sloppy
+\raggedright
+\setlength{\parskip}{0pt}
+\begin{enumerate}[label={[\arabic*]},leftmargin=*,itemsep=0.25em,topsep=0.25em,parsep=0pt]
+\item OpenCV. ``Image Filtering.'' OpenCV 4.x API Reference. \url{https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html}.
+\item OpenCV. ``Laplace Operator.'' OpenCV 4.x Tutorials. \url{https://docs.opencv.org/4.x/d5/db5/tutorial_laplace_operator.html}.
+\item scikit-image contributors. ``skimage.metrics.structural\_similarity.'' API Reference. \url{https://scikit-image.org/docs/stable/api/skimage.metrics.html#skimage.metrics.structural_similarity}.
+\item Middlebury College. ``Optical Flow: Other Datasets.'' \url{https://vision.middlebury.edu/flow/data/}.
+\item Middlebury College. ``Venus Stereo Data Archive.'' \url{https://vision.middlebury.edu/stereo/data/scenes2001/data/venus/venus.zip}.
+\item OpenCV. ``USAC: Universal RANSAC.'' OpenCV 4.x Tutorials. \url{https://docs.opencv.org/4.x/de/d3e/tutorial_usac.html}.
+\item OpenCV. ``Camera Calibration and 3D Reconstruction.'' OpenCV 4.x API Reference, calib3d module. \url{https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html}.
+\item OpenCV. ``Stereo Correspondence.'' OpenCV 5.0 API Reference. \url{https://docs.opencv.org/5.0/main_modules/stereo.html}.
+\item D. Scharstein and R. Szeliski, ``A Taxonomy and Evaluation of Dense Two-Frame Stereo Correspondence Algorithms,'' \emph{International Journal of Computer Vision}, vol. 47, pp. 7--42, 2002. \url{https://doi.org/10.1023/A:1014573219977}.
+\item T. Basha, Y. Moses, and N. Kiryati, ``Multi-view Scene Flow Estimation: A View Centered Variational Approach,'' \emph{International Journal of Computer Vision}, vol. 101, pp. 6--21, 2013. \url{https://doi.org/10.1007/s11263-012-0542-7}.
+\end{enumerate}
+\endgroup
+
+\appendix
+\section{Appendix: Python Code}
+\lstset{basicstyle=\ttfamily\footnotesize}
+\subsection{Part A: Image Filtering}
+The excerpts below show the core Part A algorithms and metrics. They omit input checks and run orchestration; the accompanying source package contains the complete executable implementation.
+\begin{lstlisting}
+import hashlib
+import math
+import cv2
+import numpy as np
+from skimage.metrics import structural_similarity
+
+def make_noisy_image(reference, noise_type, noise_level, seed):
+    noise_code = 0 if noise_type == "gaussian" else 1
+    level_digest = hashlib.sha256(float(noise_level).hex().encode()).digest()
+    level_code = int.from_bytes(level_digest[:8], "big")
+    rng = np.random.default_rng(np.random.SeedSequence([seed, noise_code, level_code]))
+    if noise_type == "gaussian":
+        noise = rng.normal(0, noise_level, reference.shape)
+        return np.rint(np.clip(reference.astype(np.float64) + noise, 0, 255)).astype(np.uint8)
+
+    height, width = reference.shape[:2]
+    count = round(noise_level * height * width)
+    indices = rng.choice(height * width, size=count, replace=False)
+    salt_count = round(count / 2)
+    result = reference.copy()
+    flat = result.reshape(-1, 3)
+    flat[indices[:salt_count]] = 255
+    flat[indices[salt_count:]] = 0
+    return result
+
+def denoise(image, method, kernel_size, sigma=None):
+    if method == "mean":
+        return cv2.blur(image, (kernel_size, kernel_size), borderType=cv2.BORDER_REPLICATE)
+    if method == "gaussian":
+        return cv2.GaussianBlur(image, (kernel_size, kernel_size),
+                                sigmaX=sigma, sigmaY=sigma,
+                                borderType=cv2.BORDER_REPLICATE)
+    return cv2.medianBlur(image, kernel_size)
+
+def sharpen_laplacian(image, laplacian_kernel_size, alpha):
+    working = image.astype(np.float32)
+    scale = 2.0 ** (4 - 2 * laplacian_kernel_size)
+    laplacian = cv2.Laplacian(working, cv2.CV_32F,
+                              ksize=laplacian_kernel_size, scale=scale,
+                              borderType=cv2.BORDER_REPLICATE)
+    return np.rint(np.clip(working - alpha * laplacian, 0, 255)).astype(np.uint8)
+
+def compute_metrics(reference, result):
+    difference = reference.astype(np.float64) - result.astype(np.float64)
+    mse = float(np.mean(difference ** 2))
+    psnr = math.inf if mse == 0 else 10 * math.log10(255 ** 2 / mse)
+    ssim = structural_similarity(
+        reference, result, data_range=255, channel_axis=-1,
+        gaussian_weights=True, sigma=1.5, use_sample_covariance=False
+    )
+    return {"mse": mse, "psnr_db": psnr, "ssim": float(ssim)}
+\end{lstlisting}
+\clearpage
+\subsection{Part B: 3D Reconstruction}
+The excerpt shows feature matching and RANSAC estimation, BM/SGBM disparity computation, ground-truth evaluation, and reprojection. The Venus disparity ground truth is derived from horizontal flow for the verified rectified pair. The camera model is assumed, so the point cloud has normalized baseline units and is qualitative rather than metric.
+\begin{lstlisting}
+import cv2
+import numpy as np
+
+def estimate_fundamental(left, right, threshold):
+    sift = cv2.SIFT_create(nfeatures=5000)
+    kp_l, des_l = sift.detectAndCompute(left, None)
+    kp_r, des_r = sift.detectAndCompute(right, None)
+    pairs = cv2.BFMatcher(cv2.NORM_L2).knnMatch(des_l, des_r, k=2)
+    good = [m for m, n in pairs if m.distance < 0.75 * n.distance]
+    pts_l = np.float32([kp_l[m.queryIdx].pt for m in good])
+    pts_r = np.float32([kp_r[m.trainIdx].pt for m in good])
+    cv2.setRNGSeed(42)
+    F, inliers = cv2.findFundamentalMat(
+        pts_l, pts_r, cv2.USAC_MAGSAC, threshold, 0.999, 5000)
+    return F, pts_l, pts_r, inliers.ravel().astype(bool)
+
+def matcher(method, disparities, block, minimum):
+    if method == "bm":
+        stereo = cv2.StereoBM_create(disparities, block)
+        stereo.setMinDisparity(minimum)
+        stereo.setTextureThreshold(10)
+        stereo.setPreFilterType(cv2.STEREO_BM_PREFILTER_XSOBEL)
+        stereo.setPreFilterSize(9)
+    else:
+        stereo = cv2.StereoSGBM_create(
+            minimum, disparities, block, P1=8 * block ** 2,
+            P2=32 * block ** 2, mode=cv2.STEREO_SGBM_MODE_SGBM_3WAY)
+    stereo.setUniquenessRatio(10)
+    stereo.setPreFilterCap(31)
+    stereo.setSpeckleWindowSize(0)
+    stereo.setSpeckleRange(0)
+    stereo.setDisp12MaxDiff(1_000_000)
+    return stereo
+
+def compute_disparity(left, right, method, disparities, block, minimum=-16):
+    gray_left = cv2.cvtColor(left, cv2.COLOR_BGR2GRAY)
+    gray_right = cv2.cvtColor(right, cv2.COLOR_BGR2GRAY)
+    minimum_r = -minimum - disparities + 1
+    raw_l = matcher(method, disparities, block, minimum).compute(gray_left, gray_right)
+    raw_r = matcher(method, disparities, block, minimum_r).compute(gray_right, gray_left)
+    d_l, d_r = raw_l.astype(np.float32) / 16, raw_r.astype(np.float32) / 16
+    valid_l = (raw_l > (minimum - 1) * 16) & (d_l >= minimum) & (d_l < minimum + disparities)
+    valid_r = (raw_r > (minimum_r - 1) * 16) & (d_r >= minimum_r) & (d_r < minimum_r + disparities)
+    y, x = np.indices(d_l.shape)
+    x_r = x - d_l
+    inside = valid_l & (x_r >= 0) & (x_r <= d_l.shape[1] - 1)
+    nearest = np.clip(np.rint(x_r).astype(int), 0, d_l.shape[1] - 1)
+    consistent = inside & valid_r[y, nearest] & (np.abs(d_l + d_r[y, nearest]) <= 1.0)
+    return d_l, consistent
+
+def flow_ground_truth(flow):
+    valid = np.isfinite(flow).all(axis=2) & (np.abs(flow) <= 1e9).all(axis=2)
+    valid &= np.abs(flow[:, :, 1]) <= 1e-4
+    y, x = np.indices(valid.shape)
+    x_r, y_r = x + flow[:, :, 0], y + flow[:, :, 1]
+    inside = ((x_r >= 0) & (x_r < valid.shape[1]) &
+              (y_r >= 0) & (y_r < valid.shape[0]))
+    return -flow[:, :, 0].astype(np.float32), valid & inside
+
+def disparity_metrics(disparity, lr_valid, gt_disparity, gt_domain):
+    error = np.abs(disparity.astype(np.float64) - gt_disparity)
+    values = error[lr_valid & gt_domain]
+    rmse = np.sqrt(np.mean(values ** 2)) if values.size else None
+    bad_pct = 100 * np.mean(values > 1.0) if values.size else None
+    return rmse, bad_pct
+
+def reproject(disparity, valid, reprojection_matrix):
+    points = cv2.reprojectImageTo3D(disparity.astype(np.float32), reprojection_matrix)
+    valid = valid & np.isfinite(points).all(axis=2) & (points[:, :, 2] > 0)
+    points[~valid] = np.nan
+    return points, valid
+\end{lstlisting}
+
+\clearpage
+\subsection{Part C: Image Stitching}
+The excerpt shows feature detection, KNN matching with Lowe's ratio test, RANSAC homographies to image 3, and distance-transform feather blending. Input loading, failure handling, and experiment bookkeeping are omitted.
+\begin{lstlisting}
+import cv2
+import numpy as np
+
+def create_detector(method, maximum=5000):
+    if method == "sift":
+        return cv2.SIFT_create(nfeatures=maximum), cv2.NORM_L2
+    if method == "orb":
+        return cv2.ORB_create(nfeatures=maximum, WTA_K=2), cv2.NORM_HAMMING
+    return (cv2.xfeatures2d.AKAZE_create(threshold=0.001, max_points=maximum),
+            cv2.NORM_HAMMING)
+
+def extract_features(images, method):
+    detector, norm = create_detector(method)
+    features = []
+    for image in images:
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        keypoints, descriptors = detector.detectAndCompute(gray, None)
+        order = sorted(range(len(keypoints)),
+                       key=lambda i: -keypoints[i].response)[:5000]
+        features.append(([keypoints[i] for i in order], descriptors[order]))
+    return features, norm
+
+def match_features(source, destination, norm, ratio=0.75):
+    key_s, desc_s = source
+    key_d, desc_d = destination
+    pairs = cv2.BFMatcher(norm, crossCheck=False).knnMatch(desc_s, desc_d, k=2)
+    complete = [pair for pair in pairs if len(pair) == 2]
+    good = [first for first, second in complete
+            if first.distance < ratio * second.distance]
+    points_s = np.float32([key_s[m.queryIdx].pt for m in good])
+    points_d = np.float32([key_d[m.trainIdx].pt for m in good])
+    return points_s, points_d, len(complete), len(good)
+
+def estimate_homography(points_s, points_d, threshold):
+    H, mask = cv2.findHomography(
+        points_s, points_d, cv2.RANSAC, threshold,
+        maxIters=5000, confidence=0.995)
+    inliers = mask.ravel().astype(bool)
+    H = H / H[2, 2]
+    projected = cv2.perspectiveTransform(
+        points_s[inliers].reshape(-1, 1, 2), H).reshape(-1, 2)
+    rmse = np.sqrt(np.mean(np.sum((projected - points_d[inliers]) ** 2, axis=1)))
+    return H, inliers, rmse
+
+def stitch_four(images, method, ratio=0.75, threshold=3.0):
+    features, norm = extract_features(images, method)
+    anchor = 2
+    transforms = [np.eye(3) for _ in images]
+    pair_results = []
+    for index in (0, 1, 3):
+        source, destination, initial, passed = match_features(
+            features[index], features[anchor], norm, ratio)
+        H, inliers, rmse = estimate_homography(source, destination, threshold)
+        transforms[index] = H
+        inlier_count = int(inliers.sum())
+        pair_results.append((initial, passed, inlier_count,
+                             100 * inlier_count / passed, rmse))
+    panorama = feather_blend(images, transforms)
+    return panorama, pair_results
+
+def feather_blend(images, transforms):
+    corners = []
+    for image, H in zip(images, transforms):
+        h, w = image.shape[:2]
+        xy = np.float32([[0, 0], [w, 0], [w, h], [0, h]]).reshape(-1, 1, 2)
+        corners.append(cv2.perspectiveTransform(xy, H).reshape(-1, 2))
+    all_corners = np.concatenate(corners)
+    lower = np.floor(all_corners.min(axis=0))
+    upper = np.ceil(all_corners.max(axis=0))
+    width, height = (upper - lower).astype(int)
+    translate = np.array([[1, 0, -lower[0]], [0, 1, -lower[1]], [0, 0, 1]])
+    color_sum = np.zeros((height, width, 3), np.float32)
+    weight_sum = np.zeros((height, width), np.float32)
+    for image, H in zip(images, transforms):
+        mask = np.pad(np.ones(image.shape[:2], np.uint8), 1)
+        weight = cv2.distanceTransform(mask, cv2.DIST_L2,
+                                       cv2.DIST_MASK_PRECISE)[1:-1, 1:-1]
+        weight /= weight.max()
+        matrix = translate @ H
+        color_sum += cv2.warpPerspective(
+            image.astype(np.float32) * weight[:, :, None], matrix,
+            (width, height), flags=cv2.INTER_LINEAR)
+        weight_sum += cv2.warpPerspective(weight, matrix, (width, height))
+    valid = weight_sum > 1e-8
+    np.divide(
+        color_sum, weight_sum[:, :, None], out=color_sum,
+        where=valid[:, :, None]
+    )
+    panorama = np.rint(np.clip(color_sum, 0, 255)).astype(np.uint8)
+    y, x = np.nonzero(valid)
+    return panorama[y.min():y.max()+1, x.min():x.max()+1]
+\end{lstlisting}
+\clearpage
+\section{Part A: Complete Final-Grid Results}
+\label{app:a-full}
+\input{part_a_full_results.tex}
+\end{document}

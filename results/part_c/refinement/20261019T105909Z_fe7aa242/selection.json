@@ -1,0 +1,29 @@
+{
+  "run_id": "20261019T105909Z_fe7aa242",
+  "status": "reviewed",
+  "choices": {
+    "sift": {
+      "case_id": "sift_r0p75_t5",
+      "reason": "Full panorama and native sign crop retain aligned lettering and ornament; 5 px adds inliers over the 3 px baseline with similar canvas geometry."
+    },
+    "orb": {
+      "case_id": "orb_r0p78_t5",
+      "reason": "Panorama and native sign crop retain comparable alignment to the baseline while the 5 px threshold admits more correspondences; residual column ghosting remains."
+    },
+    "akaze": {
+      "case_id": "akaze_r0p78_t5",
+      "reason": "Native sign crop and panorama remain aligned with a high inlier ratio; selected as the same comparison setting within the refreshed parameter grid."
+    }
+  },
+  "scope": "Selected within this image sequence and measured parameter grid; visual review is not ground truth.",
+  "reviewed_at_utc": "2026-10-19T11:03:08.394309+00:00",
+  "permutation_note": "Input-order sensitivity; the main H and inlier mask remain unchanged.",
+  "benchmark_case_ids": [
+    "sift_r0p75_t3",
+    "sift_r0p75_t5",
+    "orb_r0p75_t3",
+    "orb_r0p78_t5",
+    "akaze_r0p75_t3",
+    "akaze_r0p78_t5"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "case_id": "orb_r0p78_t5",
+  "method": "orb",
+  "ratio": 0.78,
+  "threshold_px": 5.0,
+  "status": "ok",
+  "error": "",
+  "stage": "complete",
+  "detected_keypoints": 20000,
+  "used_keypoints": 20000,
+  "initial_matches": 15000,
+  "ratio_pass_matches": 6442,
+  "inliers": 6017,
+  "inlier_ratio_pct": 93.40266997826762,
+  "rmse_px": 1.4005500737993661,
+  "squared_error_sum": 11802.58924397319,
+  "canvas_width": 3779,
+  "canvas_height": 1554,
+  "total_stitching_ms": 930.605502,
+  "elapsed_to_failure_ms": null,
+  "timing_kind": "single_sample"
+}

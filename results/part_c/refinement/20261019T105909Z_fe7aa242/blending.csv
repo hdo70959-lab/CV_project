@@ -1,0 +1,13 @@
+method,case_id,blend,bands,n_samples,warmup,median_ms,iqr_ms,mean_abs_change_from_feather,scope,quality_note
+sift,sift_r0p75_t5,feather,0,5,1,815.838414,70.50434600000006,0.0,canvas_setup_warp_blend_and_crop,Pixel change is not a quality score; inspect shared crops.
+sift,sift_r0p75_t5,multiband_3,3,5,1,1001.500852,67.64065000000005,0.6621190309524536,canvas_setup_warp_blend_and_crop,Pixel change is not a quality score; inspect shared crops.
+sift,sift_r0p75_t5,multiband_5,5,5,1,1028.601986,46.028053000000114,0.7789261937141418,canvas_setup_warp_blend_and_crop,Pixel change is not a quality score; inspect shared crops.
+sift,sift_r0p75_t5,multiband_7,7,5,1,1027.438553,97.29227999999989,1.3146758079528809,canvas_setup_warp_blend_and_crop,Pixel change is not a quality score; inspect shared crops.
+orb,orb_r0p78_t5,feather,0,5,1,687.849506,208.45472599999994,0.0,canvas_setup_warp_blend_and_crop,Pixel change is not a quality score; inspect shared crops.
+orb,orb_r0p78_t5,multiband_3,3,5,1,978.912587,58.832386999999926,0.7376288175582886,canvas_setup_warp_blend_and_crop,Pixel change is not a quality score; inspect shared crops.
+orb,orb_r0p78_t5,multiband_5,5,5,1,1114.965852,43.29191500000002,0.8544731140136719,canvas_setup_warp_blend_and_crop,Pixel change is not a quality score; inspect shared crops.
+orb,orb_r0p78_t5,multiband_7,7,5,1,1238.949361,51.76828300000011,1.38999342918396,canvas_setup_warp_blend_and_crop,Pixel change is not a quality score; inspect shared crops.
+akaze,akaze_r0p78_t5,feather,0,5,1,769.429998,76.20960500000001,0.0,canvas_setup_warp_blend_and_crop,Pixel change is not a quality score; inspect shared crops.
+akaze,akaze_r0p78_t5,multiband_3,3,5,1,1196.964644,92.68870600000014,0.6587318778038025,canvas_setup_warp_blend_and_crop,Pixel change is not a quality score; inspect shared crops.
+akaze,akaze_r0p78_t5,multiband_5,5,5,1,1158.733167,41.57539399999996,0.775387167930603,canvas_setup_warp_blend_and_crop,Pixel change is not a quality score; inspect shared crops.
+akaze,akaze_r0p78_t5,multiband_7,7,5,1,1093.338924,145.70857000000012,1.3123831748962402,canvas_setup_warp_blend_and_crop,Pixel change is not a quality score; inspect shared crops.

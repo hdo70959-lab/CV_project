@@ -1,0 +1,26 @@
+{
+  "filename": "succulent_20231108_171619.jpg",
+  "original_filename": "20231108_171619.jpg",
+  "previous_path": "my_img/20231108_171619.jpg",
+  "description": "Potted succulents with green leaves and red-tinted tips, gravel, a glazed pot, desk and background wall.",
+  "role": "Reference image for synthetic noise generation and image-quality evaluation.",
+  "encoded_size": [
+    4128,
+    3096
+  ],
+  "exif_orientation": 6,
+  "oriented_size": [
+    3096,
+    4128
+  ],
+  "working_size": [
+    768,
+    1024
+  ],
+  "preprocessing": "EXIF transpose, RGB conversion, INTER_AREA resize to maximum long edge 1024; no crop.",
+  "sha256": "ee48060d10e9c8e2ed6829860c4ef25144928029b6ebb755deb1c2ae449e8937",
+  "source_modifications": "Copied and renamed; JPEG bytes unchanged.",
+  "is_primary": true,
+  "official_notebook": "notebooks/part_a.ipynb",
+  "parameter_selection": "results/part_a/succulent/parameter_search/selection.json"
+}

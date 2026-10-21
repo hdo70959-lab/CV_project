@@ -145,6 +145,7 @@ def _measurement_syntax(source: str) -> str:
         "find_matching_run",
         "build_figures",
         "_build_blending_figures",
+        "validate_run",
     }
     tree.body = [
         node
@@ -203,7 +204,7 @@ def find_matching_run(input_dir: Path, output_root: Path, config: dict) -> Path:
             candidates.append(path.parent)
     if not candidates:
         raise FileNotFoundError(
-            "Chưa có run khớp dữ liệu/cấu hình/code/môi trường hiện tại; hãy chạy thí nghiệm trước."
+            "Không tìm thấy run khớp dữ liệu, cấu hình, code và môi trường; chạy CLI với --profile full."
         )
     reviewed = [
         path
@@ -853,7 +854,7 @@ def _robustness(
 
 
 def finalize_selection(run_dir: Path, choices: dict, repeats: int = 5, warmup: int = 1) -> dict:
-    """Đo lại các lựa chọn đã xem ảnh; không tự suy ra chất lượng từ RMSE."""
+    """Đo timing và độ nhạy thứ tự correspondence cho các cấu hình đã chọn."""
     run_dir = Path(run_dir)
     if type(repeats) is not int or repeats < 1 or type(warmup) is not int or warmup < 0:
         raise ValueError("Số lần đo/warmup không hợp lệ.")
@@ -1169,7 +1170,7 @@ def _build_blending_figures(run_dir: Path) -> None:
 
 
 def save_observations(run_dir: Path, observations: dict) -> dict:
-    """Lưu ghi nhận thực nghiệm sau khi xem hình, gắn với run đã kiểm tra."""
+    """Lưu phân tích alignment, seam, ghosting, illumination và perspective của panorama."""
     run_dir = Path(run_dir)
     validation = validate_run(run_dir)
     if not validation["valid"]:
@@ -1193,7 +1194,7 @@ def save_observations(run_dir: Path, observations: dict) -> dict:
 
 
 def validate_run(run_dir: Path) -> dict:
-    """Đối chiếu hash và tính lại số liệu từ correspondence; không chứng nhận chất lượng thị giác."""
+    """Đối chiếu hash và tính lại các metric từ correspondence đã lưu."""
     run_dir = Path(run_dir)
     errors = []
     checked_pairs = 0
@@ -1450,13 +1451,13 @@ def validate_run(run_dir: Path) -> dict:
         if (run_dir / "analysis.json").exists():
             notes = json.loads((run_dir / "analysis.json").read_text())
             if notes.get("run_id") != manifest["run_id"]:
-                errors.append("Ghi nhận thực nghiệm thuộc run khác.")
+                errors.append("Phân tích panorama thuộc run khác.")
             if any(
                 not isinstance(notes.get("qualitative", {}).get(key), str)
                 or not notes["qualitative"][key].strip()
                 for key in ("alignment", "seam", "ghosting", "illumination", "perspective")
             ):
-                errors.append("Ghi nhận thực nghiệm thiếu khía cạnh chất lượng.")
+                errors.append("Phân tích panorama thiếu khía cạnh chất lượng.")
         if (run_dir / "blending.csv").exists():
             blends = read_csv(run_dir / "blending.csv")
             raw = read_csv(run_dir / "blending/timings.csv")
@@ -1536,7 +1537,7 @@ def validate_run(run_dir: Path) -> dict:
         "valid": not errors,
         "errors": errors,
         "checked_pairs": checked_pairs,
-        "scope": "Artifact integrity and recomputed geometric metrics; not visual-quality or ground-truth certification.",
+        "scope": "Artifact hashes, geometric residuals and timing summaries from saved arrays.",
     }
 
 

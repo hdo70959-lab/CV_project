@@ -30,16 +30,25 @@ report_source/*.fls
 report_source/*.fdb_latexmk
 report_source/*.synctex.gz
 
-# Part A: local input data, experimental outputs, report draft and tests
-/data/part_a/*
-!/data/part_a/.gitkeep
+# Input images and metadata stay local
+/data/
+
+# Part A: outputs, report source and tests
 /my_img/
 /results/part_a/*
 !/results/part_a/.gitkeep
 /report_source/part_a.md
 /tests/*.py
 
-# Part C: experimental outputs and report draft
+# Part C: outputs and report source
 /results/part_c/*
 !/results/part_c/.gitkeep
 /report_source/part_c.md
+
+# Part B: outputs
+/results/part_b/*
+!/results/part_b/.gitkeep
+
+# Notebook and test caches
+.ipynb_checkpoints/
+.pytest_cache/

@@ -1,0 +1,54 @@
+{
+  "dataset": "Middlebury Optical Flow, Other Datasets",
+  "scene": "Venus",
+  "source_category": "Stereo",
+  "source_page": "https://vision.middlebury.edu/flow/data/",
+  "source_archives": {
+    "images": "https://vision.middlebury.edu/flow/data/comp/zip/other-color-twoframes.zip",
+    "ground_truth_flow": "https://vision.middlebury.edu/flow/data/comp/zip/other-gt-flow.zip"
+  },
+  "files": {
+    "frame10.png": {
+      "role_in_source": "frame 10; left/reference image, exact crop of stereo Venus im2.ppm at (10,0)",
+      "width": 420,
+      "height": 380,
+      "channels": 3,
+      "color_space": "RGB",
+      "sha256": "f36d77900848c4d5bf6f31898e43d3db4c912f474f273b331d7a96113ea5a637"
+    },
+    "frame11.png": {
+      "role_in_source": "frame 11; right/target image, exact crop of stereo Venus im6.ppm at (0,0)",
+      "width": 420,
+      "height": 380,
+      "channels": 3,
+      "color_space": "RGB",
+      "sha256": "45860656c48fec7fff1ed3528bd2d72f4f6dbf71c6d621fb2e0f48a531e617d0"
+    },
+    "flow10.flo": {
+      "role_in_source": "public optical flow GT from frame 10 to frame 11; horizontal rectified flow converted by disparity=-u in current image coordinates",
+      "width": 420,
+      "height": 380,
+      "format": "Middlebury .flo",
+      "sha256": "4f5e58609d02d8198f838de8b3f34a952cfaebf284938daa255066c535610f34"
+    }
+  },
+  "preprocessing": "None; files extracted directly from the official color two-frame and ground-truth-flow archives.",
+  "stereo_geometry": {
+    "left": "frame10.png",
+    "right": "frame11.png",
+    "rectification_evidence": "All 159600 GT flow vectors have v=0; pixel equality verified against crops of original rectified stereo views.",
+    "disparity_convention": "x_left - x_right = -flow_u for the current images; negative and zero disparities are valid",
+    "source_image_size": [434, 383],
+    "left_crop_xy": [10, 0],
+    "right_crop_xy": [0, 0],
+    "crop_verification_source": "https://vision.middlebury.edu/stereo/data/scenes2001/data/venus/venus.zip",
+    "source_files_retained": false,
+    "camera_model": "assumed pinhole, horizontal FoV 30 degrees, normalized baseline 1; see part_b.assumed_camera_model and saved camera.json",
+    "camera_assumption_reference": "Basha, Moses, Kiryati (2013), Multi-view Scene Flow Estimation: A View Centered Variational Approach, IJCV 101, 6-21, section 4.1, DOI 10.1007/s11263-012-0542-7"
+  },
+  "known_gaps": [
+    "No measured camera calibration has been identified; reconstruction uses explicitly cited assumptions and normalized units, not physical depth.",
+    "No occlusion ground-truth mask is provided for the cropped flow pair; consistency masks are reliability estimates.",
+    "Usage and redistribution terms were not verified during preparation."
+  ]
+}

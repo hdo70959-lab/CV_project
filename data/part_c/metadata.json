@@ -1,6 +1,7 @@
 {
   "dataset": "Part C four-image pagoda stitching sequence",
   "scene": "Chua Minh Thanh interior architectural sequence.",
+  "source": "Photographed by the student during a trip to Gia Lai; no external source URL.",
   "images": [
     {
       "filename": "pagoda_01.png",
@@ -8,7 +9,7 @@
         1920,
         1080
       ],
-      "sha256": "7e42d2a32835603c1fee6ef571c998b60d30852040c352870a7c13f648bb0937",
+      "sha256": "735623ea8fae4450288e2b5268db7b3124a6089f717377277fcd516b8b0c3e4a",
       "role": "Image 1 in stitching order; image 3 is the common coordinate reference."
     },
     {
@@ -17,7 +18,7 @@
         1920,
         1080
       ],
-      "sha256": "2de0a8ff6224e4014aa16412aa8a5a9b5968dc729f6c833c693ba4c7d2a77b40",
+      "sha256": "04905cc3accb16bceaa6a1ea0e9c808c611b302321e99935783917f862bed569",
       "role": "Image 2 in stitching order; image 3 is the common coordinate reference."
     },
     {
@@ -26,7 +27,7 @@
         1920,
         1080
       ],
-      "sha256": "511d2ff81b0c39a6fcccf681312ee8a9ff1f550942d8c6ecc6af102707c25435",
+      "sha256": "60ab5272174ec3d509e2ad9f25059187f5b5634febef1273cb2c452abb41705a",
       "role": "Image 3 in stitching order; image 3 is the common coordinate reference."
     },
     {
@@ -35,7 +36,7 @@
         1920,
         1080
       ],
-      "sha256": "03d99700a481b407c319ad29330d7c098b902a6f80bf1fa4df886b591e9323f7",
+      "sha256": "9b79b8a48ee0ad43f888cba15f87ad1d26a1c117776dcfae17ea232a56a50ced",
       "role": "Image 4 in stitching order; image 3 is the common coordinate reference."
     }
   ]

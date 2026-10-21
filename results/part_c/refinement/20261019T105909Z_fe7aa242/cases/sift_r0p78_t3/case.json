@@ -1,0 +1,22 @@
+{
+  "case_id": "sift_r0p78_t3",
+  "method": "sift",
+  "ratio": 0.78,
+  "threshold_px": 3.0,
+  "status": "ok",
+  "error": "",
+  "stage": "complete",
+  "detected_keypoints": 20001,
+  "used_keypoints": 20000,
+  "initial_matches": 15000,
+  "ratio_pass_matches": 6901,
+  "inliers": 6078,
+  "inlier_ratio_pct": 88.07419214606578,
+  "rmse_px": 0.7045196326706812,
+  "squared_error_sum": 3016.8026141104274,
+  "canvas_width": 3790,
+  "canvas_height": 1559,
+  "total_stitching_ms": 2614.546396,
+  "elapsed_to_failure_ms": null,
+  "timing_kind": "single_sample"
+}

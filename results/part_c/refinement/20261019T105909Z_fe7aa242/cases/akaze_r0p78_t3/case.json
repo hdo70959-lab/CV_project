@@ -1,0 +1,22 @@
+{
+  "case_id": "akaze_r0p78_t3",
+  "method": "akaze",
+  "ratio": 0.78,
+  "threshold_px": 3.0,
+  "status": "ok",
+  "error": "",
+  "stage": "complete",
+  "detected_keypoints": 20000,
+  "used_keypoints": 20000,
+  "initial_matches": 15000,
+  "ratio_pass_matches": 7184,
+  "inliers": 6692,
+  "inlier_ratio_pct": 93.15144766146993,
+  "rmse_px": 0.8723022335348317,
+  "squared_error_sum": 5092.0176609269965,
+  "canvas_width": 3788,
+  "canvas_height": 1562,
+  "total_stitching_ms": 2316.062668,
+  "elapsed_to_failure_ms": null,
+  "timing_kind": "single_sample"
+}

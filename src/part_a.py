@@ -1,4 +1,4 @@
-"""Xử lý ảnh và thí nghiệm Part A; notebook gọi cùng các hàm trong file này."""
+"""Tạo nhiễu, khử nhiễu, tăng sắc nét và đo chất lượng ảnh cho Part A."""
 
 from __future__ import annotations
 
@@ -382,7 +382,7 @@ def check_environment() -> dict:
     if sys.version_info < (3, 13):
         raise RuntimeError("Part A cần Python >=3.13; hãy chọn kernel môi trường dự án.")
     packages = {}
-    for name in ("numpy", "opencv-python-headless", "Pillow", "scikit-image", "matplotlib"):
+    for name in ("numpy", "opencv-contrib-python-headless", "Pillow", "scikit-image", "matplotlib"):
         try:
             packages[name] = version(name)
         except Exception as error:
@@ -567,7 +567,7 @@ def run_experiments(image_path: Path, output_root: Path, config: dict) -> Path:
 
 
 def validate_run(run_dir: Path) -> dict:
-    """Đối chiếu case, ảnh và metric; không chứng nhận chất lượng thực nghiệm."""
+    """Đối chiếu cấu hình, ảnh đầu ra và các bảng metric của run."""
     run_dir = Path(run_dir)
     errors = []
     try:
@@ -728,6 +728,8 @@ def comparison_tables(summary_rows: list[dict], config: dict | None = None) -> d
 def _label(row: dict) -> str:
     if row["stage"] == "noisy":
         return f"Noisy: {row['noise_type']}\nlevel={row['noise_level']}, seed={row['seed']}"
+    if row["method"] == "laplacian":
+        return f"Laplacian k={row['laplacian_kernel_size']}, alpha={row['alpha']}"
     label = row["method"].title()
     if row.get("denoise_kernel_size"):
         label += " k=" + row["denoise_kernel_size"]
@@ -738,6 +740,8 @@ def _label(row: dict) -> str:
     return label
 
 def build_figures(run_dir: Path, roi_boxes: dict[str, tuple[int, int, int, int]]) -> list[Path]:
+    import textwrap
+
     run_dir = Path(run_dir)
     validation = validate_run(run_dir)
     manifest = json.loads((run_dir / "run.json").read_text())
@@ -775,18 +779,21 @@ def build_figures(run_dir: Path, roi_boxes: dict[str, tuple[int, int, int, int]]
     records = []
     title = f"{manifest['profile']} | {manifest['run_id']}"
 
-    def save(fig, name, cases=(), note=""):
+    def save(fig, name, cases=(), note="", h_pad=2.5):
         fig.suptitle(title + ("\n" + note if note else ""), fontsize=10)
-        fig.tight_layout(rect=(0, 0, 1, 0.91), h_pad=2.5, w_pad=1.0)
+        fig.tight_layout(rect=(0, 0, 1, 0.91), h_pad=h_pad, w_pad=1.0)
         for suffix in ("png", "pdf"):
             path = figure_dir / f"{name}.{suffix}"
-            fig.savefig(path, dpi=160)
+            fig.savefig(path, dpi=300)
             paths.append(path)
         plt.close(fig)
         records.append({"name": name, "case_ids": [row["case_id"] for row in cases], "note": note})
 
     def pixels(row):
         return np.array(Image.open(run_dir / row["image_path"]).convert("RGB"))
+
+    def panel_label(row):
+        return "\n".join(textwrap.fill(line, width=20) for line in _label(row).splitlines())
 
     roi_rows = []
     for row in rows:
@@ -816,10 +823,14 @@ def build_figures(run_dir: Path, roi_boxes: dict[str, tuple[int, int, int, int]]
         return [row for row in rows if tuple(row[field] for field in GROUP_FIELDS) in keys]
 
     def comparison_panel(selected, name, crop=None):
-        fig, axes = plt.subplots(1, len(selected)+1, figsize=(3*(len(selected)+1), 4), squeeze=False)
+        columns = min(3, len(selected) + 1)
+        row_count = math.ceil((len(selected) + 1) / columns)
+        fig, axes = plt.subplots(row_count, columns, figsize=(6.4, 3 * row_count), squeeze=False)
         arrays = [reference] + [pixels(row) for row in selected]
-        labels = ["Clean reference"] + [_label(row) for row in selected]
-        for axis, array, label in zip(axes[0], arrays, labels, strict=True):
+        labels = ["Clean reference"] + [panel_label(row) for row in selected]
+        for axis in axes.flat:
+            axis.axis("off")
+        for axis, array, label in zip(axes.flat[:len(arrays)], arrays, labels, strict=True):
             if crop is not None:
                 x0, y0, x1, y1 = crop
                 array = array[y0:y1, x0:x1]
@@ -829,12 +840,12 @@ def build_figures(run_dir: Path, roi_boxes: dict[str, tuple[int, int, int, int]]
         save(fig, name, selected, "Fixed input, same ROI and nearest-neighbor display")
 
     def panel_grid(groups, name, crop=None):
-        fig, axes = plt.subplots(len(groups), 4, figsize=(12, 3 * len(groups)), squeeze=False)
+        fig, axes = plt.subplots(len(groups), 4, figsize=(6.4, 2.5 * len(groups)), squeeze=False)
         selected = []
         for axes_row, (noisy, denoised, sharpened) in zip(axes, groups, strict=True):
             selected.extend((noisy, denoised, sharpened))
             arrays = [reference, pixels(noisy), pixels(denoised), pixels(sharpened)]
-            labels = ["Clean reference", _label(noisy), _label(denoised), _label(sharpened)]
+            labels = ["Clean reference", panel_label(noisy), panel_label(denoised), panel_label(sharpened)]
             for axis, array, label in zip(axes_row, arrays, labels, strict=True):
                 if crop is not None:
                     x0, y0, x1, y1 = crop
@@ -851,7 +862,8 @@ def build_figures(run_dir: Path, roi_boxes: dict[str, tuple[int, int, int, int]]
     axis.imshow(reference)
     for name, (x0, y0, x1, y1) in roi_boxes.items():
         axis.add_patch(Rectangle((x0, y0), x1-x0, y1-y0, fill=False, edgecolor="red"))
-        axis.text(x0, y0, name, color="red", fontsize=9)
+        axis.text(x0, y0, name, color="black", fontsize=9,
+            bbox=dict(facecolor="white", edgecolor="none", alpha=0.8, pad=0.5))
     axis.axis("off")
     save(fig, "reference_rois")
 
@@ -913,12 +925,12 @@ def build_figures(run_dir: Path, roi_boxes: dict[str, tuple[int, int, int, int]]
         name = noise_type + "_error_map"
         for suffix in ("png", "pdf"):
             path = figure_dir / f"{name}.{suffix}"
-            fig.savefig(path, dpi=160)
+            fig.savefig(path, dpi=300)
             paths.append(path)
         plt.close(fig)
         records.append({"name": name, "case_ids": [row["case_id"] for row in comparisons], "note": "common scale"})
 
-        fig, axes = plt.subplots(1, 3, figsize=(13, 4))
+        fig, axes = plt.subplots(3, 1, figsize=(6.4, 8.4))
         for method in ("mean", "gaussian", "median"):
             members = [row for row in summary if row["noise_type"] == noise_type
                 and float(row["noise_level"]) == level and row["stage"] == "denoised"
@@ -936,7 +948,7 @@ def build_figures(run_dir: Path, roi_boxes: dict[str, tuple[int, int, int, int]]
         for axis, xlabel, ylabel in zip(axes, ["Denoise kernel", "Denoise kernel", "Runtime median (ms)"],
                 ["PSNR mean (dB)", "SSIM mean", "SSIM mean"], strict=True):
             axis.set(xlabel=xlabel, ylabel=ylabel)
-            axis.legend(fontsize=6)
+            axis.legend(fontsize=8, loc="center left", bbox_to_anchor=(1.01, 0.5))
         note = ("Single setting: no sensitivity conclusion"
                 if len(config["denoise_kernels"]) == 1
                 else "Quality averaged over seeds; timing pooled median")
@@ -958,12 +970,17 @@ def build_figures(run_dir: Path, roi_boxes: dict[str, tuple[int, int, int, int]]
         save(fig, noise_type + "_gaussian_heatmap", contributing_cases(gaussian))
 
         sharp_rows = [row for row in available if row["stage"] == "noisy_then_sharpened"]
-        fig, axes = plt.subplots(1, len(sharp_rows)+1, figsize=(3*(len(sharp_rows)+1), 4), squeeze=False)
-        for axis, row in zip(axes[0], [noisy] + sharp_rows, strict=True):
-            axis.imshow(pixels(row), interpolation="nearest")
-            axis.set_title(_label(row), fontsize=8)
+        columns = min(4, len(sharp_rows) + 1)
+        row_count = math.ceil((len(sharp_rows) + 1) / columns)
+        fig, axes = plt.subplots(row_count, columns, figsize=(6.4, 3.5 * row_count), squeeze=False)
+        for axis in axes.flat:
             axis.axis("off")
-        save(fig, noise_type + "_sharpening_direct", [noisy] + sharp_rows, "Direct sharpening is not denoising")
+        for axis, row in zip(axes.flat[:len(sharp_rows)+1], [noisy] + sharp_rows, strict=True):
+            axis.imshow(pixels(row), interpolation="nearest")
+            axis.set_title(panel_label(row), fontsize=8)
+            axis.axis("off")
+        save(fig, noise_type + "_sharpening_direct", [noisy] + sharp_rows,
+            "Direct sharpening is not denoising", h_pad=7)
 
         fig, axes = plt.subplots(1, 2, figsize=(10, 4))
         sharpening_members = []

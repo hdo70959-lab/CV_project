@@ -1,0 +1,22 @@
+{
+  "case_id": "orb_r0p72_t3",
+  "method": "orb",
+  "ratio": 0.72,
+  "threshold_px": 3.0,
+  "status": "ok",
+  "error": "",
+  "stage": "complete",
+  "detected_keypoints": 20000,
+  "used_keypoints": 20000,
+  "initial_matches": 15000,
+  "ratio_pass_matches": 5339,
+  "inliers": 4930,
+  "inlier_ratio_pct": 92.33938939876381,
+  "rmse_px": 1.2244833388212,
+  "squared_error_sum": 7391.842073960019,
+  "canvas_width": 3803,
+  "canvas_height": 1554,
+  "total_stitching_ms": 954.45837,
+  "elapsed_to_failure_ms": null,
+  "timing_kind": "single_sample"
+}

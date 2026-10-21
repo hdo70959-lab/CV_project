@@ -1,0 +1,495 @@
+{
+  "run_id": "20261019T024705Z_aef5c7be",
+  "profile": "full",
+  "status": "complete",
+  "config": {
+    "profile": "full",
+    "max_long_edge": 1024,
+    "noise_levels": {
+      "gaussian": [
+        10,
+        20,
+        30
+      ],
+      "salt_pepper": [
+        0.01,
+        0.03,
+        0.05
+      ]
+    },
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "save_seeds": [
+      42
+    ],
+    "denoise_kernels": [
+      3,
+      5,
+      7,
+      9,
+      11
+    ],
+    "gaussian_sigmas": [
+      0.6,
+      0.8,
+      1.0,
+      1.2,
+      1.4,
+      1.5,
+      1.6
+    ],
+    "laplacian_kernels": [
+      3,
+      5,
+      7
+    ],
+    "alphas": [
+      0.1,
+      0.2,
+      0.25,
+      0.5
+    ],
+    "warmup": 2,
+    "repeats": 10,
+    "roi_boxes": {
+      "pot_wall": [
+        0.29,
+        0.75,
+        0.64,
+        0.85
+      ],
+      "leaf_edges": [
+        0.25,
+        0.39,
+        0.53,
+        0.59
+      ],
+      "gravel": [
+        0.28,
+        0.6,
+        0.5,
+        0.67
+      ]
+    },
+    "selected_denoisers": {
+      "gaussian": {
+        "10.0": {
+          "mean": [
+            3,
+            null
+          ],
+          "gaussian": [
+            5,
+            0.8
+          ],
+          "median": [
+            3,
+            null
+          ]
+        },
+        "20.0": {
+          "mean": [
+            5,
+            null
+          ],
+          "gaussian": [
+            7,
+            1.2
+          ],
+          "median": [
+            5,
+            null
+          ]
+        },
+        "30.0": {
+          "mean": [
+            5,
+            null
+          ],
+          "gaussian": [
+            9,
+            1.5
+          ],
+          "median": [
+            7,
+            null
+          ]
+        }
+      },
+      "salt_pepper": {
+        "0.01": {
+          "mean": [
+            3,
+            null
+          ],
+          "gaussian": [
+            5,
+            1.0
+          ],
+          "median": [
+            3,
+            null
+          ]
+        },
+        "0.03": {
+          "mean": [
+            5,
+            null
+          ],
+          "gaussian": [
+            7,
+            1.4
+          ],
+          "median": [
+            3,
+            null
+          ]
+        },
+        "0.05": {
+          "mean": [
+            5,
+            null
+          ],
+          "gaussian": [
+            11,
+            1.6
+          ],
+          "median": [
+            3,
+            null
+          ]
+        }
+      }
+    }
+  },
+  "input": {
+    "filename": "succulent_20231108_171619.jpg",
+    "sha256": "ee48060d10e9c8e2ed6829860c4ef25144928029b6ebb755deb1c2ae449e8937",
+    "encoded_size": [
+      4128,
+      3096
+    ],
+    "exif_orientation": 6,
+    "oriented_size": [
+      3096,
+      4128
+    ],
+    "working_size": [
+      768,
+      1024
+    ],
+    "color_space": "RGB",
+    "dtype": "uint8",
+    "data_range": 255,
+    "resize_interpolation": "INTER_AREA"
+  },
+  "expected_counts": {
+    "metrics": 1584,
+    "processed": 1566,
+    "timings": 15660,
+    "images": 529
+  },
+  "noise_statistics": [
+    {
+      "noise_type": "gaussian",
+      "noise_level": 10.0,
+      "seed": 42,
+      "rng_entropy": [
+        42,
+        0,
+        14589914039391162112
+      ],
+      "mean": 0,
+      "noise_sigma": 10.0,
+      "realized_mean": -0.1101671854654948,
+      "realized_std": 9.883811328336968
+    },
+    {
+      "noise_type": "gaussian",
+      "noise_level": 10.0,
+      "seed": 43,
+      "rng_entropy": [
+        43,
+        0,
+        14589914039391162112
+      ],
+      "mean": 0,
+      "noise_sigma": 10.0,
+      "realized_mean": -0.1190478006998698,
+      "realized_std": 9.883566790976431
+    },
+    {
+      "noise_type": "gaussian",
+      "noise_level": 10.0,
+      "seed": 44,
+      "rng_entropy": [
+        44,
+        0,
+        14589914039391162112
+      ],
+      "mean": 0,
+      "noise_sigma": 10.0,
+      "realized_mean": -0.10732354058159722,
+      "realized_std": 9.883602828284454
+    },
+    {
+      "noise_type": "gaussian",
+      "noise_level": 20.0,
+      "seed": 42,
+      "rng_entropy": [
+        42,
+        0,
+        4805638665904576875
+      ],
+      "mean": 0,
+      "noise_sigma": 20.0,
+      "realized_mean": -0.3461265563964844,
+      "realized_std": 19.499805904434794
+    },
+    {
+      "noise_type": "gaussian",
+      "noise_level": 20.0,
+      "seed": 43,
+      "rng_entropy": [
+        43,
+        0,
+        4805638665904576875
+      ],
+      "mean": 0,
+      "noise_sigma": 20.0,
+      "realized_mean": -0.33781517876519096,
+      "realized_std": 19.496425586627087
+    },
+    {
+      "noise_type": "gaussian",
+      "noise_level": 20.0,
+      "seed": 44,
+      "rng_entropy": [
+        44,
+        0,
+        4805638665904576875
+      ],
+      "mean": 0,
+      "noise_sigma": 20.0,
+      "realized_mean": -0.34094662136501735,
+      "realized_std": 19.49929580703157
+    },
+    {
+      "noise_type": "gaussian",
+      "noise_level": 30.0,
+      "seed": 42,
+      "rng_entropy": [
+        42,
+        0,
+        16336470623099570882
+      ],
+      "mean": 0,
+      "noise_sigma": 30.0,
+      "realized_mean": -0.6641014946831597,
+      "realized_std": 28.758928438880396
+    },
+    {
+      "noise_type": "gaussian",
+      "noise_level": 30.0,
+      "seed": 43,
+      "rng_entropy": [
+        43,
+        0,
+        16336470623099570882
+      ],
+      "mean": 0,
+      "noise_sigma": 30.0,
+      "realized_mean": -0.6400294833713107,
+      "realized_std": 28.737791027457725
+    },
+    {
+      "noise_type": "gaussian",
+      "noise_level": 30.0,
+      "seed": 44,
+      "rng_entropy": [
+        44,
+        0,
+        16336470623099570882
+      ],
+      "mean": 0,
+      "noise_sigma": 30.0,
+      "realized_mean": -0.6651700337727865,
+      "realized_std": 28.74089764021535
+    },
+    {
+      "noise_type": "salt_pepper",
+      "noise_level": 0.01,
+      "seed": 42,
+      "rng_entropy": [
+        42,
+        1,
+        11156230415210459723
+      ],
+      "amount": 0.01,
+      "salt_vs_pepper": 0.5,
+      "selected_pixels": 7864,
+      "changed_pixels": 7864,
+      "selected_ratio": 0.009999593098958334,
+      "changed_ratio": 0.009999593098958334
+    },
+    {
+      "noise_type": "salt_pepper",
+      "noise_level": 0.01,
+      "seed": 43,
+      "rng_entropy": [
+        43,
+        1,
+        11156230415210459723
+      ],
+      "amount": 0.01,
+      "salt_vs_pepper": 0.5,
+      "selected_pixels": 7864,
+      "changed_pixels": 7864,
+      "selected_ratio": 0.009999593098958334,
+      "changed_ratio": 0.009999593098958334
+    },
+    {
+      "noise_type": "salt_pepper",
+      "noise_level": 0.01,
+      "seed": 44,
+      "rng_entropy": [
+        44,
+        1,
+        11156230415210459723
+      ],
+      "amount": 0.01,
+      "salt_vs_pepper": 0.5,
+      "selected_pixels": 7864,
+      "changed_pixels": 7863,
+      "selected_ratio": 0.009999593098958334,
+      "changed_ratio": 0.009998321533203125
+    },
+    {
+      "noise_type": "salt_pepper",
+      "noise_level": 0.03,
+      "seed": 42,
+      "rng_entropy": [
+        42,
+        1,
+        11933680833375061999
+      ],
+      "amount": 0.03,
+      "salt_vs_pepper": 0.5,
+      "selected_pixels": 23593,
+      "changed_pixels": 23593,
+      "selected_ratio": 0.030000050862630207,
+      "changed_ratio": 0.030000050862630207
+    },
+    {
+      "noise_type": "salt_pepper",
+      "noise_level": 0.03,
+      "seed": 43,
+      "rng_entropy": [
+        43,
+        1,
+        11933680833375061999
+      ],
+      "amount": 0.03,
+      "salt_vs_pepper": 0.5,
+      "selected_pixels": 23593,
+      "changed_pixels": 23590,
+      "selected_ratio": 0.030000050862630207,
+      "changed_ratio": 0.029996236165364582
+    },
+    {
+      "noise_type": "salt_pepper",
+      "noise_level": 0.03,
+      "seed": 44,
+      "rng_entropy": [
+        44,
+        1,
+        11933680833375061999
+      ],
+      "amount": 0.03,
+      "salt_vs_pepper": 0.5,
+      "selected_pixels": 23593,
+      "changed_pixels": 23592,
+      "selected_ratio": 0.030000050862630207,
+      "changed_ratio": 0.029998779296875
+    },
+    {
+      "noise_type": "salt_pepper",
+      "noise_level": 0.05,
+      "seed": 42,
+      "rng_entropy": [
+        42,
+        1,
+        969404929498266831
+      ],
+      "amount": 0.05,
+      "salt_vs_pepper": 0.5,
+      "selected_pixels": 39322,
+      "changed_pixels": 39318,
+      "selected_ratio": 0.050000508626302086,
+      "changed_ratio": 0.04999542236328125
+    },
+    {
+      "noise_type": "salt_pepper",
+      "noise_level": 0.05,
+      "seed": 43,
+      "rng_entropy": [
+        43,
+        1,
+        969404929498266831
+      ],
+      "amount": 0.05,
+      "salt_vs_pepper": 0.5,
+      "selected_pixels": 39322,
+      "changed_pixels": 39318,
+      "selected_ratio": 0.050000508626302086,
+      "changed_ratio": 0.04999542236328125
+    },
+    {
+      "noise_type": "salt_pepper",
+      "noise_level": 0.05,
+      "seed": 44,
+      "rng_entropy": [
+        44,
+        1,
+        969404929498266831
+      ],
+      "amount": 0.05,
+      "salt_vs_pepper": 0.5,
+      "selected_pixels": 39322,
+      "changed_pixels": 39321,
+      "selected_ratio": 0.050000508626302086,
+      "changed_ratio": 0.049999237060546875
+    }
+  ],
+  "environment": {
+    "python": "3.13.14 (main, Jun 23 2026, 15:18:27) [Clang 22.1.3 ]",
+    "executable": "/home/sin235/Projects/VNU_IS/CV_project/.venv/bin/python3",
+    "packages": {
+      "numpy": "2.5.4",
+      "opencv-python-headless": "5.0.0.93",
+      "Pillow": "13.0.0",
+      "scikit-image": "0.26.0",
+      "matplotlib": "3.11.2"
+    },
+    "platform": "Linux-7.2.11-200.fc44.x86_64-x86_64-with-glibc2.43",
+    "cpu": "x86_64"
+  },
+  "code_sha256": "59df55bc12b072c0b9c5624afac54395fde1758377e636e40b9ff5dd91dee0fb",
+  "config_sha256": "ea441f32ffef41bffade9148ff1e3776b8357e26f48d88b2848fa1bda7fbe11f",
+  "timing_scope": "algorithm_including_validation_and_conversions_excluding_io_noise_metrics",
+  "opencv_threads": 1,
+  "opencl_enabled": false,
+  "metrics": {
+    "data_range": 255,
+    "color_space": "RGB",
+    "ssim_gaussian_weights": true,
+    "ssim_sigma": 1.5,
+    "ssim_use_sample_covariance": false
+  },
+  "source_code": "\"\"\"Xử lý ảnh và thí nghiệm Part A; notebook gọi cùng các hàm trong file này.\"\"\"\n\nfrom __future__ import annotations\n\nimport hashlib\nimport math\nimport copy\nimport csv\nimport json\nimport platform\nimport sys\nimport time\nimport uuid\nfrom collections import defaultdict\nfrom datetime import datetime, timezone\nfrom importlib.metadata import version\nfrom pathlib import Path\nfrom typing import Callable\n\nimport matplotlib\nmatplotlib.use(\"Agg\")\nimport matplotlib.pyplot as plt\nfrom matplotlib.patches import Rectangle\n\nimport cv2\nimport numpy as np\nfrom PIL import Image, ImageOps, UnidentifiedImageError\n\n\nDEFAULT_INPUT = Path(\"data/part_a/succulent_20231108_171619.jpg\")\nDEFAULT_OUTPUT = Path(\"results/part_a/official\")\n\nDEFAULT_CONFIG = {\n    \"profile\": \"full\",\n    \"max_long_edge\": 1024,\n    \"noise_levels\": {\"gaussian\": [10, 20, 30], \"salt_pepper\": [0.01, 0.03, 0.05]},\n    \"seeds\": [42, 43, 44],\n    \"save_seeds\": [42],\n    \"denoise_kernels\": [3, 5, 7, 9, 11],\n    \"gaussian_sigmas\": [0.6, 0.8, 1.0, 1.2, 1.4, 1.5, 1.6],\n    \"laplacian_kernels\": [3, 5, 7],\n    \"alphas\": [0.1, 0.2, 0.25, 0.5],\n    \"warmup\": 2,\n    \"repeats\": 10,\n    \"roi_boxes\": {\n        \"pot_wall\": [0.29, 0.75, 0.64, 0.85],\n        \"leaf_edges\": [0.25, 0.39, 0.53, 0.59],\n        \"gravel\": [0.28, 0.6, 0.5, 0.67],\n    },\n    \"selected_denoisers\": {\n        \"gaussian\": {\n            \"10.0\": {\"mean\": [3, None], \"gaussian\": [5, 0.8], \"median\": [3, None]},\n            \"20.0\": {\"mean\": [5, None], \"gaussian\": [7, 1.2], \"median\": [5, None]},\n            \"30.0\": {\"mean\": [5, None], \"gaussian\": [9, 1.5], \"median\": [7, None]},\n        },\n        \"salt_pepper\": {\n            \"0.01\": {\"mean\": [3, None], \"gaussian\": [5, 1.0], \"median\": [3, None]},\n            \"0.03\": {\"mean\": [5, None], \"gaussian\": [7, 1.4], \"median\": [3, None]},\n            \"0.05\": {\"mean\": [5, None], \"gaussian\": [11, 1.6], \"median\": [3, None]},\n        },\n    },\n}\n# Giữ cấu hình cũ để kiểm chứng các run chưa lưu selected_denoisers.\nLEGACY_GAUSSIAN_SETTINGS = {\n    \"gaussian\": {10: (3, 0.6), 20: (3, 0.8), 30: (5, 0.8)},\n    \"salt_pepper\": {0.01: (3, 0.6), 0.03: (5, 0.8), 0.05: (7, 1.2)},\n}\nRECOMMENDED_SHARPENING = {\"laplacian_kernel_size\": 3, \"alpha\": 0.1}\n\n\nSMOKE_CONFIG = copy.deepcopy(DEFAULT_CONFIG)\nSMOKE_CONFIG.update(\n    profile=\"smoke\", max_long_edge=256,\n    noise_levels={\"gaussian\": [20], \"salt_pepper\": [0.03]},\n    seeds=[42], denoise_kernels=[3], gaussian_sigmas=[1.2],\n    laplacian_kernels=[3], alphas=[0.25], warmup=1, repeats=2,\n)\nSMOKE_CONFIG.pop(\"selected_denoisers\", None)\n\nCASE_FIELDS = [\"case_id\", \"noise_type\", \"noise_level\", \"seed\", \"stage\", \"method\",\n    \"denoise_kernel_size\", \"filter_sigma\", \"laplacian_kernel_size\", \"laplacian_scale\", \"alpha\"]\nMETRIC_FIELDS = CASE_FIELDS + [\"mse\", \"psnr_db\", \"psnr_is_infinite\", \"ssim\",\n    \"runtime_ms\", \"runtime_iqr_ms\", \"runtime_reason\", \"status\", \"error\",\n    \"image_saved\", \"image_path\", \"image_sha256\", \"image_reason\", \"measurement_run_id\"]\nTIMING_FIELDS = [\"case_id\", \"repeat\", \"elapsed_ms\", \"scope\"]\nGROUP_FIELDS = [field for field in CASE_FIELDS if field not in (\"case_id\", \"seed\")]\nSUMMARY_FIELDS = GROUP_FIELDS + [\"n_seeds\", \"mse_mean\", \"mse_std\", \"psnr_db_mean\",\n    \"psnr_db_std\", \"psnr_is_infinite\", \"ssim_mean\", \"ssim_std\", \"runtime_ms\", \"runtime_iqr_ms\", \"measurement_run_id\"]\nTIMING_SCOPE = \"algorithm_including_validation_and_conversions_excluding_io_noise_metrics\"\n\n\ndef load_reference(image_path: Path, max_long_edge: int) -> tuple[np.ndarray, dict]:\n    \"\"\"Chuẩn hóa EXIF/RGB, chỉ thu nhỏ ảnh; kích thước metadata theo rộng × cao.\"\"\"\n    if type(max_long_edge) is not int or max_long_edge < 1:\n        raise ValueError(\"Cạnh dài phải là số nguyên dương.\")\n    image_path = Path(image_path)\n    if not image_path.is_file():\n        raise FileNotFoundError(image_path)\n    source_bytes = image_path.read_bytes()\n    try:\n        with Image.open(image_path) as source:\n            encoded_size = list(source.size)\n            orientation = source.getexif().get(274, 1)\n            oriented = ImageOps.exif_transpose(source).convert(\"RGB\")\n            oriented_size = list(oriented.size)\n            reference = np.array(oriented)\n    except (UnidentifiedImageError, OSError) as error:\n        raise ValueError(f\"Không đọc được ảnh: {image_path}\") from error\n\n    height, width = reference.shape[:2]\n    resize_scale = min(1.0, max_long_edge / max(height, width))\n    if resize_scale < 1:\n        working_size = (max(1, round(width * resize_scale)), max(1, round(height * resize_scale)))\n        reference = cv2.resize(reference, working_size, interpolation=cv2.INTER_AREA)\n    metadata = {\n        \"filename\": image_path.name,\n        \"sha256\": hashlib.sha256(source_bytes).hexdigest(),\n        \"encoded_size\": encoded_size,\n        \"exif_orientation\": orientation,\n        \"oriented_size\": oriented_size,\n        \"working_size\": [reference.shape[1], reference.shape[0]],\n        \"color_space\": \"RGB\",\n        \"dtype\": \"uint8\",\n        \"data_range\": 255,\n        \"resize_interpolation\": \"INTER_AREA\",\n    }\n    return reference, metadata\n\n\ndef _require_rgb_uint8(image: np.ndarray) -> None:\n    if not isinstance(image, np.ndarray) or image.dtype != np.uint8:\n        raise ValueError(\"Ảnh phải là mảng RGB uint8 trong khoảng 0–255.\")\n    if image.ndim != 3 or image.shape[2] != 3 or min(image.shape[:2]) == 0:\n        raise ValueError(\"Ảnh phải có kích thước H×W×3 và không rỗng.\")\n\n\ndef _require_kernel(kernel_size: int, allowed: tuple = (3, 5, 7, 9, 11)) -> None:\n    if type(kernel_size) is not int or kernel_size not in allowed:\n        raise ValueError(f\"Kernel hỗ trợ: {allowed}.\")\n\n\ndef _require_number(value: float, name: str, minimum: float = 0) -> None:\n    if isinstance(value, (bool, str)) or not isinstance(value, (int, float)):\n        raise ValueError(f\"{name} phải là số hữu hạn.\")\n    if not math.isfinite(value) or value < minimum:\n        raise ValueError(f\"{name} phải hữu hạn và không nhỏ hơn {minimum}.\")\n\n\ndef make_noisy_image(\n    reference: np.ndarray, noise_type: str, noise_level: float, seed: int\n) -> tuple[np.ndarray, dict]:\n    \"\"\"Sinh nhiễu độc lập với thứ tự chạy filter; thống kê sau clip và làm tròn.\"\"\"\n    _require_rgb_uint8(reference)\n    _require_number(noise_level, \"Mức nhiễu\")\n    if type(seed) is not int or seed < 0:\n        raise ValueError(\"Seed phải là số nguyên không âm.\")\n    if noise_type not in (\"gaussian\", \"salt_pepper\"):\n        raise ValueError(\"Loại nhiễu phải là gaussian hoặc salt_pepper.\")\n    if noise_type == \"salt_pepper\" and noise_level > 1:\n        raise ValueError(\"Salt-and-Pepper amount phải trong khoảng 0–1.\")\n\n    noise_code = 0 if noise_type == \"gaussian\" else 1\n    # Mã mức nhiễu ổn định, không phụ thuộc hash ngẫu nhiên của tiến trình Python.\n    level_digest = hashlib.sha256(float(noise_level).hex().encode()).digest()\n    level_code = int.from_bytes(level_digest[:8], \"big\")\n    entropy = [seed, noise_code, level_code]\n    rng = np.random.default_rng(np.random.SeedSequence(entropy))\n    stats = {\"noise_type\": noise_type, \"noise_level\": noise_level, \"seed\": seed, \"rng_entropy\": entropy}\n    if noise_type == \"gaussian\":\n        noise = rng.normal(0, noise_level, reference.shape)\n        result = np.rint(np.clip(reference.astype(np.float64) + noise, 0, 255)).astype(np.uint8)\n        difference = result.astype(np.float64) - reference\n        stats.update(mean=0, noise_sigma=noise_level,\n            realized_mean=float(difference.mean()), realized_std=float(difference.std()))\n    else:\n        height, width = reference.shape[:2]\n        selected_count = round(noise_level * height * width)\n        indices = rng.choice(height * width, size=selected_count, replace=False)\n        salt_count = round(selected_count / 2)\n        result = reference.copy()\n        flat = result.reshape(-1, 3)\n        flat[indices[:salt_count]] = 255\n        flat[indices[salt_count:]] = 0\n        changed_count = int(np.count_nonzero(np.any(result != reference, axis=-1)))\n        stats.update(amount=noise_level, salt_vs_pepper=0.5,\n            selected_pixels=selected_count, changed_pixels=changed_count,\n            selected_ratio=selected_count / (height * width),\n            changed_ratio=changed_count / (height * width))\n    return result, stats\n\n\ndef denoise(\n    image: np.ndarray, method: str, kernel_size: int, filter_sigma: float | None = None\n) -> np.ndarray:\n    _require_rgb_uint8(image)\n    _require_kernel(kernel_size)\n    if method == \"mean\":\n        return cv2.blur(image, (kernel_size, kernel_size), borderType=cv2.BORDER_REPLICATE)\n    if method == \"median\":\n        return cv2.medianBlur(image, kernel_size)\n    if method == \"gaussian\":\n        _require_number(filter_sigma, \"Filter sigma\")\n        if filter_sigma == 0:\n            raise ValueError(\"Filter sigma phải lớn hơn 0.\")\n        return cv2.GaussianBlur(image, (kernel_size, kernel_size), sigmaX=filter_sigma,\n            sigmaY=filter_sigma, borderType=cv2.BORDER_REPLICATE)\n    raise ValueError(\"Phương pháp phải là mean, gaussian hoặc median.\")\n\n\ndef sharpen_laplacian(image: np.ndarray, laplacian_kernel_size: int, alpha: float) -> np.ndarray:\n    \"\"\"Giữ dấu đạo hàm; chuẩn hóa gain khi thay aperture 3/5/7 của OpenCV.\"\"\"\n    _require_rgb_uint8(image)\n    _require_kernel(laplacian_kernel_size, (3, 5, 7))\n    _require_number(alpha, \"Alpha\")\n    working = image.astype(np.float32)\n    scale = 2.0 ** (4 - 2 * laplacian_kernel_size)\n    laplacian = cv2.Laplacian(working, cv2.CV_32F, ksize=laplacian_kernel_size,\n        scale=scale, borderType=cv2.BORDER_REPLICATE)\n    return np.rint(np.clip(working - alpha * laplacian, 0, 255)).astype(np.uint8)\n\n\ndef compute_metrics(reference: np.ndarray, result: np.ndarray) -> dict:\n    from skimage.metrics import structural_similarity\n\n    _require_rgb_uint8(reference)\n    _require_rgb_uint8(result)\n    if reference.shape != result.shape or min(reference.shape[:2]) < 11:\n        raise ValueError(\"Hai ảnh phải cùng kích thước và mỗi chiều ít nhất 11 pixel cho SSIM.\")\n    difference = reference.astype(np.float64) - result.astype(np.float64)\n    mse = float(np.mean(difference ** 2))\n    psnr = math.inf if mse == 0 else 10 * math.log10(255 ** 2 / mse)\n    ssim = structural_similarity(reference, result, data_range=255, channel_axis=-1,\n        gaussian_weights=True, sigma=1.5, use_sample_covariance=False)\n    return {\"mse\": mse, \"psnr_db\": psnr, \"ssim\": float(ssim)}\n\n\ndef _validate_config(config: dict) -> None:\n    base_fields = set(DEFAULT_CONFIG) - {\"selected_denoisers\"}\n    if not isinstance(config, dict) or set(config) not in (base_fields, base_fields | {\"selected_denoisers\"}):\n        raise ValueError(\"Config phải chứa đúng các trường của DEFAULT_CONFIG.\")\n    if config[\"profile\"] not in (\"smoke\", \"full\"):\n        raise ValueError(\"Profile phải là smoke hoặc full.\")\n    for field in (\"max_long_edge\", \"warmup\", \"repeats\"):\n        minimum = 11 if field == \"max_long_edge\" else (0 if field == \"warmup\" else 1)\n        if type(config[field]) is not int or config[field] < minimum:\n            raise ValueError(f\"{field} phải là số nguyên không nhỏ hơn {minimum}.\")\n    for field in (\"seeds\", \"save_seeds\", \"denoise_kernels\", \"gaussian_sigmas\", \"laplacian_kernels\", \"alphas\"):\n        values = config[field]\n        if not isinstance(values, list) or not values:\n            raise ValueError(f\"{field} phải là danh sách không rỗng.\")\n        for value in values:\n            if field in (\"seeds\", \"save_seeds\"):\n                if type(value) is not int or value < 0:\n                    raise ValueError(\"Seed phải là số nguyên không âm.\")\n            elif field == \"laplacian_kernels\":\n                _require_kernel(value, (3, 5, 7))\n            elif field == \"denoise_kernels\":\n                _require_kernel(value)\n            else:\n                _require_number(value, field)\n                if field == \"gaussian_sigmas\" and value == 0:\n                    raise ValueError(\"Gaussian sigma phải lớn hơn 0.\")\n        if len(set(values)) != len(values):\n            raise ValueError(f\"{field} không được chứa giá trị trùng.\")\n    if not set(config[\"save_seeds\"]).issubset(config[\"seeds\"]):\n        raise ValueError(\"save_seeds phải là tập con của seeds.\")\n    levels = config[\"noise_levels\"]\n    if not isinstance(levels, dict) or set(levels) != {\"gaussian\", \"salt_pepper\"}:\n        raise ValueError(\"Config phải có cả Gaussian và Salt-and-Pepper.\")\n    for noise_type, values in levels.items():\n        if not isinstance(values, list) or not values:\n            raise ValueError(\"Mỗi loại nhiễu cần ít nhất một mức.\")\n        for value in values:\n            _require_number(value, \"Mức nhiễu\")\n            if noise_type == \"salt_pepper\" and value > 1:\n                raise ValueError(\"Salt-and-Pepper amount phải trong khoảng 0–1.\")\n        if len(set(values)) != len(values):\n            raise ValueError(\"Mức nhiễu không được trùng.\")\n    if \"selected_denoisers\" in config:\n        settings = config[\"selected_denoisers\"]\n        if not isinstance(settings, dict) or set(settings) != set(levels):\n            raise ValueError(\"Cấu hình denoiser phải có đủ hai loại nhiễu.\")\n        for noise_type, values in levels.items():\n            if not isinstance(settings[noise_type], dict) or set(settings[noise_type]) != {str(float(v)) for v in values}:\n                raise ValueError(\"Cấu hình denoiser phải khớp các mức nhiễu.\")\n            for value in values:\n                methods = settings[noise_type][str(float(value))]\n                if not isinstance(methods, dict) or set(methods) != {\"mean\", \"gaussian\", \"median\"}:\n                    raise ValueError(\"Cần cấu hình cho cả Mean, Gaussian và Median.\")\n                for method, choice in methods.items():\n                    if not isinstance(choice, list) or len(choice) != 2:\n                        raise ValueError(\"Denoiser cần cặp [kernel, sigma].\")\n                    kernel, sigma = choice\n                    _require_kernel(kernel)\n                    if kernel not in config[\"denoise_kernels\"]:\n                        raise ValueError(\"Kernel đã chọn phải thuộc lưới thí nghiệm.\")\n                    if method == \"gaussian\":\n                        _require_number(sigma, \"Filter sigma\")\n                        if sigma <= 0 or sigma not in config[\"gaussian_sigmas\"]:\n                            raise ValueError(\"Sigma đã chọn phải thuộc lưới thí nghiệm.\")\n                    elif sigma is not None:\n                        raise ValueError(\"Mean và Median không dùng sigma.\")\n    if not isinstance(config[\"roi_boxes\"], dict) or not config[\"roi_boxes\"]:\n        raise ValueError(\"Cần ít nhất một ROI chuẩn hóa.\")\n    for name, box in config[\"roi_boxes\"].items():\n        if not isinstance(name, str) or not name.isidentifier() or len(box) != 4:\n            raise ValueError(\"ROI cần tên hợp lệ và bốn tọa độ.\")\n        for value in box:\n            _require_number(value, \"Tọa độ ROI\")\n        x0, y0, x1, y1 = box\n        if not 0 <= x0 < x1 <= 1 or not 0 <= y0 < y1 <= 1:\n            raise ValueError(\"ROI chuẩn hóa phải nằm trong ảnh và có diện tích dương.\")\n\n\ndef _make_case(base, stage, method, kernel=None, sigma=None, laplacian_kernel=None, alpha=None):\n    case = dict(base, stage=stage, method=method, denoise_kernel_size=kernel,\n        filter_sigma=sigma, laplacian_kernel_size=laplacian_kernel,\n        laplacian_scale=None if laplacian_kernel is None else 2.0 ** (4 - 2 * laplacian_kernel), alpha=alpha)\n    identity = json.dumps(case, sort_keys=True, allow_nan=False).encode()\n    return dict(case_id=hashlib.sha256(identity).hexdigest()[:20], **case)\n\n\ndef selected_filter(noise_type: str, level: float, method: str, config: dict | None = None) -> tuple:\n    config = DEFAULT_CONFIG if config is None else config\n    if \"selected_denoisers\" in config:\n        try:\n            return tuple(config[\"selected_denoisers\"][noise_type][str(float(level))][method])\n        except (KeyError, TypeError, ValueError) as error:\n            raise ValueError(\"Không có denoiser đã chọn cho loại/mức nhiễu này.\") from error\n    if method in (\"mean\", \"median\"):\n        return 3, None\n    if method != \"gaussian\" or noise_type not in LEGACY_GAUSSIAN_SETTINGS or level not in LEGACY_GAUSSIAN_SETTINGS[noise_type]:\n        raise ValueError(\"Cấu hình full chỉ dùng các loại/mức nhiễu đã chốt.\")\n    return LEGACY_GAUSSIAN_SETTINGS[noise_type][level]\n\n\ndef enumerate_cases(config: dict) -> list[dict]:\n    \"\"\"Liệt kê đầy đủ case; hai trục kernel luôn là các trường riêng biệt.\"\"\"\n    _validate_config(config)\n    cases = []\n    for noise_type in (\"gaussian\", \"salt_pepper\"):\n        for level in config[\"noise_levels\"][noise_type]:\n            for seed in config[\"seeds\"]:\n                base = {\"noise_type\": noise_type, \"noise_level\": float(level), \"seed\": seed}\n                cases.append(_make_case(base, \"noisy\", \"none\"))\n                for method in (\"mean\", \"gaussian\", \"median\"):\n                    for kernel in config[\"denoise_kernels\"]:\n                        sigmas = config[\"gaussian_sigmas\"] if method == \"gaussian\" else [None]\n                        for sigma in sigmas:\n                            sigma = None if sigma is None else float(sigma)\n                            cases.append(_make_case(base, \"denoised\", method, kernel, sigma))\n                            if config[\"profile\"] == \"full\":\n                                selected_kernel, selected_sigma = selected_filter(noise_type, level, method, config)\n                                if kernel != selected_kernel or sigma != selected_sigma:\n                                    continue\n                            for laplacian_kernel in config[\"laplacian_kernels\"]:\n                                for alpha in config[\"alphas\"]:\n                                    cases.append(_make_case(base, \"denoised_then_sharpened\", method,\n                                        kernel, sigma, laplacian_kernel, float(alpha)))\n                for laplacian_kernel in config[\"laplacian_kernels\"]:\n                    for alpha in config[\"alphas\"]:\n                        if config[\"profile\"] == \"full\" and alpha not in (0.25, 0.5):\n                            continue\n                        cases.append(_make_case(base, \"noisy_then_sharpened\", \"laplacian\",\n                            laplacian_kernel=laplacian_kernel, alpha=float(alpha)))\n    return cases\n\n\ndef expected_counts(config: dict) -> dict:\n    cases = enumerate_cases(config)\n    processed = sum(case[\"stage\"] != \"noisy\" for case in cases)\n    saved = sum(case[\"seed\"] in config[\"save_seeds\"] for case in cases)\n    return {\"metrics\": len(cases), \"processed\": processed,\n        \"timings\": processed * config[\"repeats\"], \"images\": saved + 1}\n\n\ndef check_environment() -> dict:\n    \"\"\"Dừng sớm nếu kernel không đáp ứng phiên bản/dependency của dự án.\"\"\"\n    if sys.version_info < (3, 13):\n        raise RuntimeError(\"Part A cần Python >=3.13; hãy chọn kernel môi trường dự án.\")\n    packages = {}\n    for name in (\"numpy\", \"opencv-python-headless\", \"Pillow\", \"scikit-image\", \"matplotlib\"):\n        try:\n            packages[name] = version(name)\n        except Exception as error:\n            raise RuntimeError(f\"Thiếu dependency {name}; chạy uv sync --group dev.\") from error\n    return {\"python\": sys.version, \"executable\": sys.executable, \"packages\": packages}\n\n\ndef measure_runtime(operation: Callable[[], np.ndarray], warmup: int, repeats: int) -> list[float]:\n    \"\"\"Đo callable đã nhận ảnh trong RAM; không cộng các trung vị từng giai đoạn.\"\"\"\n    if type(warmup) is not int or warmup < 0 or type(repeats) is not int or repeats < 1:\n        raise ValueError(\"Warm-up phải >=0 và repeats phải >=1, đều là số nguyên.\")\n    for _ in range(warmup):\n        operation()\n    samples = []\n    for _ in range(repeats):\n        start = time.perf_counter_ns()\n        operation()\n        samples.append((time.perf_counter_ns() - start) / 1_000_000)\n    return samples\n\n\ndef _write_json(path: Path, payload: dict) -> None:\n    temporary = path.with_suffix(\".tmp\")\n    temporary.write_text(json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False) + \"\\n\")\n    temporary.replace(path)\n\n\ndef _write_csv(path: Path, rows: list[dict], fields: list[str]) -> None:\n    with path.open(\"w\", newline=\"\", encoding=\"utf-8\") as stream:\n        writer = csv.DictWriter(stream, fieldnames=fields)\n        writer.writeheader()\n        writer.writerows(rows)\n\n\ndef read_csv(path: Path) -> list[dict]:\n    with path.open(newline=\"\", encoding=\"utf-8\") as stream:\n        return list(csv.DictReader(stream))\n\n\ndef _save_image(path: Path, image: np.ndarray) -> str:\n    Image.fromarray(image).save(path)\n    return hashlib.sha256(path.read_bytes()).hexdigest()\n\n\ndef _apply_case(noisy: np.ndarray, case: dict) -> np.ndarray:\n    stage = case[\"stage\"]\n    if stage == \"noisy\":\n        return noisy.copy()\n    result = noisy\n    if stage in (\"denoised\", \"denoised_then_sharpened\"):\n        result = denoise(result, case[\"method\"], case[\"denoise_kernel_size\"], case[\"filter_sigma\"])\n    if stage in (\"denoised_then_sharpened\", \"noisy_then_sharpened\"):\n        result = sharpen_laplacian(result, case[\"laplacian_kernel_size\"], case[\"alpha\"])\n    return result\n\n\ndef summarize_rows(rows: list[dict], timings: list[dict]) -> list[dict]:\n    groups = defaultdict(list)\n    timing_groups = defaultdict(list)\n    for timing in timings:\n        timing_groups[timing[\"case_id\"]].append(float(timing[\"elapsed_ms\"]))\n    for row in rows:\n        if row[\"status\"] == \"ok\":\n            key = tuple(str(row.get(field, \"\")) for field in GROUP_FIELDS)\n            groups[key].append(row)\n    summaries = []\n    for members in groups.values():\n        summary = {field: members[0][field] for field in GROUP_FIELDS}\n        summary[\"n_seeds\"] = len(members)\n        source_runs = {row.get(\"measurement_run_id\", \"\") for row in members}\n        if len(source_runs) != 1:\n            raise ValueError(\"Không gộp timing của cùng cấu hình từ các run khác nhau.\")\n        summary[\"measurement_run_id\"] = source_runs.pop()\n        for metric in (\"mse\", \"psnr_db\", \"ssim\"):\n            values = np.array([float(row[metric]) for row in members])\n            summary[metric + \"_mean\"] = float(values.mean())\n            summary[metric + \"_std\"] = (\n                float(values.std(ddof=1)) if len(values) > 1 and np.isfinite(values).all() else None\n            )\n        summary[\"psnr_is_infinite\"] = bool(math.isinf(summary[\"psnr_db_mean\"]))\n        samples = [sample for row in members for sample in timing_groups[row[\"case_id\"]]]\n        summary[\"runtime_ms\"] = float(np.median(samples)) if samples else None\n        summary[\"runtime_iqr_ms\"] = float(np.subtract(*np.percentile(samples, [75, 25]))) if samples else None\n        summaries.append(summary)\n    return summaries\n\n\ndef run_experiments(image_path: Path, output_root: Path, config: dict) -> Path:\n    \"\"\"Chạy một profile trong thư mục mới; lỗi xử lý được giữ lại trong CSV.\"\"\"\n    config = copy.deepcopy(config)\n    cases = enumerate_cases(config)\n    reference, metadata = load_reference(image_path, config[\"max_long_edge\"])\n    if min(reference.shape[:2]) < 11:\n        raise ValueError(\"Ảnh tham chiếu quá nhỏ cho SSIM.\")\n    environment = check_environment()\n    output_root = Path(output_root)\n    output_root.mkdir(parents=True, exist_ok=True)\n    run_id = datetime.now(timezone.utc).strftime(\"%Y%m%dT%H%M%SZ\") + \"_\" + uuid.uuid4().hex[:8]\n    run_dir = output_root / run_id\n    run_dir.mkdir()\n    (run_dir / \"images\").mkdir()\n    manifest = {\n        \"run_id\": run_id, \"profile\": config[\"profile\"], \"status\": \"running\", \"config\": config,\n        \"input\": metadata, \"expected_counts\": expected_counts(config), \"noise_statistics\": [],\n        \"environment\": dict(environment, platform=platform.platform(),\n            cpu=platform.processor() or platform.machine()),\n        \"code_sha256\": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),\n        \"config_sha256\": hashlib.sha256(json.dumps(config, sort_keys=True).encode()).hexdigest(),\n        \"timing_scope\": TIMING_SCOPE, \"opencv_threads\": 1, \"opencl_enabled\": False,\n        \"metrics\": {\"data_range\": 255, \"color_space\": \"RGB\", \"ssim_gaussian_weights\": True,\n            \"ssim_sigma\": 1.5, \"ssim_use_sample_covariance\": False},\n    }\n    manifest[\"source_code\"] = Path(__file__).read_text()\n    manifest[\"run_kind\"] = \"fresh_measurement\"\n    rows, timings = [], []\n    previous_threads = cv2.getNumThreads()\n    previous_opencl = cv2.ocl.useOpenCL()\n    _write_json(run_dir / \"run.json\", manifest)\n    try:\n        cv2.setNumThreads(1)\n        cv2.ocl.setUseOpenCL(False)\n        manifest[\"reference_sha256\"] = _save_image(run_dir / \"reference.png\", reference)\n        noisy_key, noisy = None, None\n        with (run_dir / \"metrics.csv\").open(\"w\", newline=\"\", encoding=\"utf-8\") as metrics_stream, \\\n             (run_dir / \"timings.csv\").open(\"w\", newline=\"\", encoding=\"utf-8\") as timing_stream:\n            metric_writer = csv.DictWriter(metrics_stream, fieldnames=METRIC_FIELDS)\n            timing_writer = csv.DictWriter(timing_stream, fieldnames=TIMING_FIELDS)\n            metric_writer.writeheader()\n            timing_writer.writeheader()\n            for case in cases:\n                key = (case[\"noise_type\"], case[\"noise_level\"], case[\"seed\"])\n                row = dict.fromkeys(METRIC_FIELDS)\n                row.update(case, status=\"ok\", error=\"\", runtime_reason=\"not_applicable\",\n                    image_saved=\"false\", image_reason=\"seed_not_selected\", measurement_run_id=run_id)\n                case_timings = []\n                try:\n                    if key != noisy_key:\n                        noisy, stats = make_noisy_image(reference, *key)\n                        manifest[\"noise_statistics\"].append(stats)\n                        noisy_key = key\n                    operation = lambda: _apply_case(noisy, case)\n                    result = operation()\n                    row.update(compute_metrics(reference, result))\n                    row[\"psnr_is_infinite\"] = str(math.isinf(row[\"psnr_db\"])).lower()\n                    if case[\"stage\"] != \"noisy\":\n                        samples = measure_runtime(operation, config[\"warmup\"], config[\"repeats\"])\n                        row.update(runtime_ms=float(np.median(samples)),\n                            runtime_iqr_ms=float(np.subtract(*np.percentile(samples, [75, 25]))),\n                            runtime_reason=\"measured\")\n                        case_timings = [dict(case_id=case[\"case_id\"], repeat=index,\n                            elapsed_ms=sample, scope=TIMING_SCOPE) for index, sample in enumerate(samples)]\n                    if case[\"seed\"] in config[\"save_seeds\"]:\n                        relative = \"images/\" + case[\"case_id\"] + \".png\"\n                        digest = _save_image(run_dir / relative, result)\n                        row.update(image_saved=\"true\", image_path=relative,\n                            image_sha256=digest, image_reason=\"saved\")\n                except Exception as error:\n                    row.update(status=\"error\", error=f\"{type(error).__name__}: {error}\")\n                rows.append(row)\n                timings.extend(case_timings)\n                metric_writer.writerow(row)\n                timing_writer.writerows(case_timings)\n                metrics_stream.flush()\n                timing_stream.flush()\n        _write_csv(run_dir / \"summary.csv\", summarize_rows(rows, timings), SUMMARY_FIELDS)\n        _write_json(run_dir / \"run.json\", manifest)\n        validation = validate_run(run_dir)\n        _write_json(run_dir / \"validation.json\", validation)\n        if not validation[\"valid\"]:\n            raise RuntimeError(\"Run không hợp lệ: \" + \"; \".join(validation[\"errors\"][:5]))\n        manifest[\"status\"] = \"complete\"\n        _write_json(run_dir / \"run.json\", manifest)\n    except BaseException as error:\n        manifest[\"status\"] = \"interrupted\" if isinstance(error, KeyboardInterrupt) else \"failed\"\n        manifest[\"error\"] = f\"{type(error).__name__}: {error}\"\n        _write_json(run_dir / \"run.json\", manifest)\n        raise\n    finally:\n        cv2.setNumThreads(previous_threads)\n        cv2.ocl.setUseOpenCL(previous_opencl)\n    return run_dir\n\n\ndef validate_run(run_dir: Path) -> dict:\n    \"\"\"Đối chiếu case, ảnh và metric; không chứng nhận chất lượng thực nghiệm.\"\"\"\n    run_dir = Path(run_dir)\n    errors = []\n    try:\n        manifest = json.loads((run_dir / \"run.json\").read_text())\n        config = manifest[\"config\"]\n        expected = enumerate_cases(config)\n        expected_by_id = {case[\"case_id\"]: case for case in expected}\n        rows = read_csv(run_dir / \"metrics.csv\")\n        timings = read_csv(run_dir / \"timings.csv\")\n        if manifest[\"status\"] not in (\"running\", \"complete\"):\n            errors.append(\"Run không có trạng thái running/complete.\")\n        if manifest[\"run_id\"] != run_dir.name or manifest[\"profile\"] != config[\"profile\"]:\n            errors.append(\"Run ID hoặc profile không khớp.\")\n        if len(rows) != len(expected) or {r[\"case_id\"] for r in rows} != set(expected_by_id):\n            errors.append(\"Danh sách case không khớp config.\")\n        if manifest[\"expected_counts\"] != expected_counts(config):\n            errors.append(\"Số lượng dự kiến không khớp cấu hình/case đã chọn.\")\n        if len(timings) != expected_counts(config)[\"timings\"]:\n            errors.append(\"Thiếu hoặc thừa mẫu timing.\")\n        reference_path = run_dir / \"reference.png\"\n        if hashlib.sha256(reference_path.read_bytes()).hexdigest() != manifest[\"reference_sha256\"]:\n            errors.append(\"Checksum reference không khớp.\")\n        reference = np.array(Image.open(reference_path).convert(\"RGB\"))\n        timing_groups = defaultdict(list)\n        for item in timings:\n            elapsed = float(item[\"elapsed_ms\"])\n            if item[\"case_id\"] not in expected_by_id or not math.isfinite(elapsed) or elapsed < 0:\n                errors.append(\"Mẫu timing không hợp lệ.\")\n            if item[\"scope\"] != TIMING_SCOPE:\n                errors.append(\"Phạm vi timing không khớp.\")\n            timing_groups[item[\"case_id\"]].append(item)\n        for row in rows:\n            case = expected_by_id[row[\"case_id\"]]\n            for field in CASE_FIELDS:\n                wanted = \"\" if case[field] is None else str(case[field])\n                if row[field] != wanted:\n                    errors.append(f\"Case {row['case_id']}: {field} không khớp.\")\n            if row[\"status\"] != \"ok\":\n                errors.append(f\"Case lỗi {row['case_id']}: {row['error']}\")\n                continue\n            mse, psnr, ssim = (float(row[key]) for key in (\"mse\", \"psnr_db\", \"ssim\"))\n            if not math.isfinite(mse) or mse < 0 or not math.isfinite(ssim) or not -1 <= ssim <= 1:\n                errors.append(\"Metric ngoài miền hợp lệ.\")\n            expected_psnr = math.inf if mse == 0 else 10 * math.log10(255 ** 2 / mse) if mse > 0 else math.nan\n            if not math.isclose(psnr, expected_psnr, rel_tol=1e-9, abs_tol=1e-9):\n                errors.append(\"PSNR không khớp MSE.\")\n            samples = timing_groups[row[\"case_id\"]]\n            if case[\"stage\"] == \"noisy\":\n                if samples or row[\"runtime_ms\"] or row[\"runtime_reason\"] != \"not_applicable\":\n                    errors.append(\"Baseline noisy không được có runtime filter.\")\n            else:\n                if len(samples) != config[\"repeats\"] or {int(t[\"repeat\"]) for t in samples} != set(range(config[\"repeats\"])):\n                    errors.append(\"Số mẫu timing của case không đúng.\")\n                if samples and not math.isclose(float(row[\"runtime_ms\"]), float(np.median([float(t[\"elapsed_ms\"]) for t in samples]))):\n                    errors.append(\"Runtime median không khớp mẫu gốc.\")\n            should_save = case[\"seed\"] in config[\"save_seeds\"]\n            if (row[\"image_saved\"] == \"true\") != should_save:\n                errors.append(\"Trạng thái lưu ảnh không khớp seed.\")\n            if should_save:\n                wanted_path = \"images/\" + row[\"case_id\"] + \".png\"\n                if row[\"image_path\"] != wanted_path:\n                    errors.append(\"Đường dẫn ảnh không khớp case.\")\n                    continue\n                path = run_dir / wanted_path\n                if hashlib.sha256(path.read_bytes()).hexdigest() != row[\"image_sha256\"]:\n                    errors.append(\"Checksum ảnh không khớp.\")\n                result = np.array(Image.open(path).convert(\"RGB\"))\n                recalculated = compute_metrics(reference, result)\n                for metric in (\"mse\", \"psnr_db\", \"ssim\"):\n                    if not math.isclose(float(row[metric]), recalculated[metric], rel_tol=1e-9, abs_tol=1e-9):\n                        errors.append(f\"{metric} không khớp PNG.\")\n        summaries = read_csv(run_dir / \"summary.csv\")\n        recalculated_summary = summarize_rows(rows, timings)\n        if len(summaries) != len(recalculated_summary):\n            errors.append(\"Số dòng summary không khớp.\")\n        else:\n            for actual, wanted in zip(summaries, recalculated_summary, strict=True):\n                for field in SUMMARY_FIELDS:\n                    value = wanted[field]\n                    if value is None:\n                        equal = actual[field] == \"\"\n                    elif isinstance(value, float):\n                        equal = math.isclose(float(actual[field]), value, rel_tol=1e-9, abs_tol=1e-9)\n                    else:\n                        equal = actual[field] == str(value)\n                    if not equal:\n                        errors.append(f\"Summary {field} không khớp CSV gốc.\")\n    except (OSError, ValueError, KeyError, TypeError) as error:\n        errors.append(f\"Không đọc/kiểm tra được artifact: {error}\")\n    return {\"valid\": not errors, \"errors\": errors}\n\n\ndef choose_denoiser(rows: list[dict], method: str, config: dict | None) -> dict:\n    candidates = [row for row in rows if row[\"method\"] == method and row[\"stage\"] == \"denoised\"]\n    if config is None or config[\"profile\"] != \"full\":\n        return select_best_denoised(candidates)\n    kernel, sigma = selected_filter(candidates[0][\"noise_type\"], float(candidates[0][\"noise_level\"]), method, config)\n    return next(row for row in candidates if int(row[\"denoise_kernel_size\"]) == kernel\n        and (float(row[\"filter_sigma\"]) if row[\"filter_sigma\"] else None) == sigma)\n\n\ndef resolve_rois(normalized_boxes: dict, image_shape: tuple) -> dict:\n    height, width = image_shape[:2]\n    boxes = {}\n    for name, coordinates in normalized_boxes.items():\n        if len(coordinates) != 4:\n            raise ValueError(\"ROI cần bốn tọa độ.\")\n        x0, y0, x1, y1 = coordinates\n        if not all(math.isfinite(v) for v in coordinates) or not (0 <= x0 < x1 <= 1 and 0 <= y0 < y1 <= 1):\n            raise ValueError(\"ROI chuẩn hóa nằm ngoài ảnh.\")\n        box = (round(x0 * width), round(y0 * height), round(x1 * width), round(y1 * height))\n        if box[0] >= box[2] or box[1] >= box[3]:\n            raise ValueError(\"ROI quá nhỏ sau khi đổi tọa độ.\")\n        boxes[name] = box\n    return boxes\n\ndef select_best_denoised(rows: list[dict]) -> dict:\n    candidates = [row for row in rows if row[\"stage\"] == \"denoised\"]\n    if not candidates:\n        raise ValueError(\"Không có cấu hình denoised.\")\n    return min(candidates, key=lambda row: (-float(row[\"ssim_mean\"]),\n        -float(row[\"psnr_db_mean\"]), json.dumps(row, sort_keys=True)))\n\ndef comparison_tables(summary_rows: list[dict], config: dict | None = None) -> dict[str, list[dict]]:\n    \"\"\"Ghép chuỗi denoise–sharpen theo cấu hình chốt; smoke chọn theo SSIM.\"\"\"\n    variants = sorted({(row[\"noise_type\"], row[\"noise_level\"]) for row in summary_rows})\n    best_rows, sharpened_rows = [], []\n    for noise_type, level in variants:\n        members = [row for row in summary_rows\n            if row[\"noise_type\"] == noise_type and row[\"noise_level\"] == level]\n        noisy = next(row for row in members if row[\"stage\"] == \"noisy\")\n        methods = sorted({row[\"method\"] for row in members if row[\"stage\"] == \"denoised\"})\n        for method in methods:\n            best = choose_denoiser(members, method, config)\n            best_rows.append(dict(best,\n                delta_ssim_vs_noisy=float(best[\"ssim_mean\"]) - float(noisy[\"ssim_mean\"]),\n                delta_psnr_db_vs_noisy=float(best[\"psnr_db_mean\"]) - float(noisy[\"psnr_db_mean\"])))\n            matching = [row for row in members if row[\"stage\"] == \"denoised_then_sharpened\"\n                and row[\"method\"] == method\n                and row[\"denoise_kernel_size\"] == best[\"denoise_kernel_size\"]\n                and row[\"filter_sigma\"] == best[\"filter_sigma\"]]\n            for row in matching:\n                sharpened_rows.append(dict(row,\n                    denoised_ssim_mean=best[\"ssim_mean\"], denoised_psnr_db_mean=best[\"psnr_db_mean\"],\n                    denoised_runtime_ms=best[\"runtime_ms\"],\n                    delta_ssim_vs_denoised=float(row[\"ssim_mean\"]) - float(best[\"ssim_mean\"]),\n                    delta_psnr_db_vs_denoised=float(row[\"psnr_db_mean\"]) - float(best[\"psnr_db_mean\"])))\n    return {\n        \"denoised_comparison.csv\": best_rows,\n        \"sharpening_comparison.csv\": sharpened_rows,\n        \"direct_sharpening.csv\": [row for row in summary_rows if row[\"stage\"] == \"noisy_then_sharpened\"],\n        \"noisy_baselines.csv\": [row for row in summary_rows if row[\"stage\"] == \"noisy\"],\n    }\n\ndef _label(row: dict) -> str:\n    if row[\"stage\"] == \"noisy\":\n        return f\"Noisy: {row['noise_type']}\\nlevel={row['noise_level']}, seed={row['seed']}\"\n    label = row[\"method\"].title()\n    if row.get(\"denoise_kernel_size\"):\n        label += \" k=\" + row[\"denoise_kernel_size\"]\n    if row.get(\"filter_sigma\"):\n        label += \" sigma=\" + row[\"filter_sigma\"]\n    if row.get(\"laplacian_kernel_size\"):\n        label += f\"\\nLaplacian k={row['laplacian_kernel_size']}, alpha={row['alpha']}\"\n    return label\n\ndef build_figures(run_dir: Path, roi_boxes: dict[str, tuple[int, int, int, int]]) -> list[Path]:\n    run_dir = Path(run_dir)\n    validation = validate_run(run_dir)\n    manifest = json.loads((run_dir / \"run.json\").read_text())\n    if not validation[\"valid\"] or manifest[\"status\"] != \"complete\":\n        raise ValueError(\"Chỉ tạo hình từ run complete và artifact hợp lệ.\")\n    _write_json(run_dir / \"validation.json\", validation)\n    reference = np.array(Image.open(run_dir / \"reference.png\").convert(\"RGB\"))\n    height, width = reference.shape[:2]\n    for name, box in roi_boxes.items():\n        if not name.isidentifier() or len(box) != 4 or any(type(v) is not int for v in box):\n            raise ValueError(\"ROI cần tên hợp lệ và tọa độ nguyên.\")\n        x0, y0, x1, y1 = box\n        if not (0 <= x0 < x1 <= width and 0 <= y0 < y1 <= height):\n            raise ValueError(\"ROI nằm ngoài ảnh.\")\n    if not roi_boxes:\n        raise ValueError(\"Cần ít nhất một ROI.\")\n    figure_dir = run_dir / \"figures\"\n    table_dir = run_dir / \"tables\"\n    figure_dir.mkdir(exist_ok=True)\n    table_dir.mkdir(exist_ok=True)\n\n    rows = read_csv(run_dir / \"metrics.csv\")\n    summary = read_csv(run_dir / \"summary.csv\")\n    config = manifest[\"config\"]\n    paths = [run_dir / \"summary.csv\"]\n    for filename, table_rows in comparison_tables(summary, config).items():\n        if not table_rows:\n            continue\n        path = table_dir / filename\n        with path.open(\"w\", newline=\"\", encoding=\"utf-8\") as stream:\n            writer = csv.DictWriter(stream, fieldnames=list(table_rows[0]))\n            writer.writeheader()\n            writer.writerows(table_rows)\n        paths.append(path)\n    records = []\n    title = f\"{manifest['profile']} | {manifest['run_id']}\"\n\n    def save(fig, name, cases=(), note=\"\"):\n        fig.suptitle(title + (\"\\n\" + note if note else \"\"), fontsize=10)\n        fig.tight_layout(rect=(0, 0, 1, 0.91), h_pad=2.5, w_pad=1.0)\n        for suffix in (\"png\", \"pdf\"):\n            path = figure_dir / f\"{name}.{suffix}\"\n            fig.savefig(path, dpi=160)\n            paths.append(path)\n        plt.close(fig)\n        records.append({\"name\": name, \"case_ids\": [row[\"case_id\"] for row in cases], \"note\": note})\n\n    def pixels(row):\n        return np.array(Image.open(run_dir / row[\"image_path\"]).convert(\"RGB\"))\n\n    roi_rows = []\n    for row in rows:\n        if row[\"image_saved\"] != \"true\":\n            continue\n        output = pixels(row)\n        for name, (x0, y0, x1, y1) in roi_boxes.items():\n            record = {\"case_id\": row[\"case_id\"], \"seed\": row[\"seed\"], \"roi\": name,\n                \"x0\": x0, \"y0\": y0, \"x1\": x1, \"y1\": y1,\n                \"status\": \"ok\", \"mse\": \"\", \"psnr_db\": \"\", \"ssim\": \"\"}\n            if min(x1-x0, y1-y0) < 11:\n                record[\"status\"] = \"too_small_for_ssim\"\n            else:\n                measured = compute_metrics(reference[y0:y1, x0:x1], output[y0:y1, x0:x1])\n                record.update({key: measured[key] for key in (\"mse\", \"psnr_db\", \"ssim\")})\n            roi_rows.append(record)\n    if roi_rows:\n        path = table_dir / \"roi_metrics.csv\"\n        with path.open(\"w\", newline=\"\", encoding=\"utf-8\") as stream:\n            writer = csv.DictWriter(stream, fieldnames=list(roi_rows[0]))\n            writer.writeheader()\n            writer.writerows(roi_rows)\n        paths.append(path)\n\n    def contributing_cases(summary_members):\n        keys = {tuple(member[field] for field in GROUP_FIELDS) for member in summary_members}\n        return [row for row in rows if tuple(row[field] for field in GROUP_FIELDS) in keys]\n\n    def comparison_panel(selected, name, crop=None):\n        fig, axes = plt.subplots(1, len(selected)+1, figsize=(3*(len(selected)+1), 4), squeeze=False)\n        arrays = [reference] + [pixels(row) for row in selected]\n        labels = [\"Clean reference\"] + [_label(row) for row in selected]\n        for axis, array, label in zip(axes[0], arrays, labels, strict=True):\n            if crop is not None:\n                x0, y0, x1, y1 = crop\n                array = array[y0:y1, x0:x1]\n            axis.imshow(array, interpolation=\"nearest\")\n            axis.set_title(label, fontsize=8)\n            axis.axis(\"off\")\n        save(fig, name, selected, \"Fixed input, same ROI and nearest-neighbor display\")\n\n    def panel_grid(groups, name, crop=None):\n        fig, axes = plt.subplots(len(groups), 4, figsize=(12, 3 * len(groups)), squeeze=False)\n        selected = []\n        for axes_row, (noisy, denoised, sharpened) in zip(axes, groups, strict=True):\n            selected.extend((noisy, denoised, sharpened))\n            arrays = [reference, pixels(noisy), pixels(denoised), pixels(sharpened)]\n            labels = [\"Clean reference\", _label(noisy), _label(denoised), _label(sharpened)]\n            for axis, array, label in zip(axes_row, arrays, labels, strict=True):\n                if crop is not None:\n                    x0, y0, x1, y1 = crop\n                    array = array[y0:y1, x0:x1]\n                axis.imshow(array, interpolation=\"nearest\")\n                axis.set_title(label, fontsize=8)\n                axis.axis(\"off\")\n        noisy = groups[0][0]\n        save(fig, name, selected,\n            f\"{noisy['noise_type']}, level={noisy['noise_level']}, seed={noisy['seed']}; same reference and noisy input\")\n\n    fig, axis = plt.subplots(figsize=(6, 8))\n    axis.imshow(reference)\n    for name, (x0, y0, x1, y1) in roi_boxes.items():\n        axis.add_patch(Rectangle((x0, y0), x1-x0, y1-y0, fill=False, edgecolor=\"red\"))\n        axis.text(x0, y0, name, color=\"red\", fontsize=9)\n    axis.axis(\"off\")\n    save(fig, \"reference_rois\")\n\n    for noise_type in (\"gaussian\", \"salt_pepper\"):\n        levels = config[\"noise_levels\"][noise_type]\n        level = levels[len(levels)//2]\n        seed = config[\"save_seeds\"][0]\n        available = [row for row in rows if row[\"noise_type\"] == noise_type\n            and float(row[\"noise_level\"]) == level and int(row[\"seed\"]) == seed]\n        noisy = next(row for row in available if row[\"stage\"] == \"noisy\")\n        groups = []\n        for method in (\"mean\", \"gaussian\", \"median\"):\n            candidates = [row for row in summary if row[\"noise_type\"] == noise_type\n                and float(row[\"noise_level\"]) == level and row[\"method\"] == method]\n            best = choose_denoiser(candidates, method, config)\n            denoised = next(row for row in available if row[\"stage\"] == \"denoised\"\n                and row[\"method\"] == method and row[\"denoise_kernel_size\"] == best[\"denoise_kernel_size\"]\n                and row[\"filter_sigma\"] == best[\"filter_sigma\"])\n            sharpened = next(row for row in available if row[\"stage\"] == \"denoised_then_sharpened\"\n                and row[\"method\"] == method and row[\"denoise_kernel_size\"] == denoised[\"denoise_kernel_size\"]\n                and row[\"filter_sigma\"] == denoised[\"filter_sigma\"]\n                and int(row[\"laplacian_kernel_size\"]) == config[\"laplacian_kernels\"][0]\n                and float(row[\"alpha\"]) == config[\"alphas\"][0])\n            groups.append((noisy, denoised, sharpened))\n        panel_grid(groups, noise_type + \"_grid\")\n        for name, box in roi_boxes.items():\n            panel_grid(groups, noise_type + \"_roi_\" + name, box)\n\n        if len(config[\"denoise_kernels\"]) > 1:\n            kernel_rows = [row for row in available if row[\"stage\"] == \"denoised\"\n                and row[\"method\"] == \"mean\" and int(row[\"denoise_kernel_size\"]) in\n                (min(config[\"denoise_kernels\"]), max(config[\"denoise_kernels\"]))]\n            for name, box in roi_boxes.items():\n                comparison_panel(kernel_rows, noise_type + \"_kernel_comparison_\" + name, box)\n        if len(config[\"laplacian_kernels\"]) > 1 or len(config[\"alphas\"]) > 1:\n            base = groups[0][1]\n            sharpen_rows = [row for row in available if row[\"stage\"] == \"denoised_then_sharpened\"\n                and row[\"method\"] == base[\"method\"]\n                and row[\"denoise_kernel_size\"] == base[\"denoise_kernel_size\"]\n                and row[\"filter_sigma\"] == base[\"filter_sigma\"]\n                and int(row[\"laplacian_kernel_size\"]) == config[\"laplacian_kernels\"][0]]\n            for name, box in roi_boxes.items():\n                comparison_panel([base] + sharpen_rows,\n                    noise_type + \"_sharpening_comparison_\" + name, box)\n\n        comparisons = [triple[1] for triple in groups] + [groups[0][2]]\n        errors = [np.abs(pixels(row).astype(float) - reference).mean(axis=-1) for row in comparisons]\n        error_max = max(1.0, max(float(error.max()) for error in errors))\n        fig, axes = plt.subplots(1, len(errors), figsize=(12, 4))\n        for axis, error, row in zip(axes, errors, comparisons, strict=True):\n            display = axis.imshow(error, cmap=\"magma\", vmin=0, vmax=error_max)\n            axis.set_title(_label(row), fontsize=8)\n            axis.axis(\"off\")\n        # Colorbar chung cần bố cục thủ công, không ép tight_layout.\n        fig.suptitle(title + \"\\nCommon error scale\", fontsize=10)\n        fig.subplots_adjust(top=0.72, right=0.82)\n        colorbar_axis = fig.add_axes((0.86, 0.22, 0.012, 0.40))\n        fig.colorbar(display, cax=colorbar_axis, label=\"Mean absolute RGB error (0–255)\")\n        name = noise_type + \"_error_map\"\n        for suffix in (\"png\", \"pdf\"):\n            path = figure_dir / f\"{name}.{suffix}\"\n            fig.savefig(path, dpi=160)\n            paths.append(path)\n        plt.close(fig)\n        records.append({\"name\": name, \"case_ids\": [row[\"case_id\"] for row in comparisons], \"note\": \"common scale\"})\n\n        fig, axes = plt.subplots(1, 3, figsize=(13, 4))\n        for method in (\"mean\", \"gaussian\", \"median\"):\n            members = [row for row in summary if row[\"noise_type\"] == noise_type\n                and float(row[\"noise_level\"]) == level and row[\"stage\"] == \"denoised\"\n                and row[\"method\"] == method]\n            sigmas = sorted({row[\"filter_sigma\"] for row in members})\n            for sigma in sigmas:\n                curve = sorted([row for row in members if row[\"filter_sigma\"] == sigma],\n                    key=lambda row: int(row[\"denoise_kernel_size\"]))\n                label = method + (\" sigma=\" + sigma if sigma else \"\")\n                kernels = [int(row[\"denoise_kernel_size\"]) for row in curve]\n                axes[0].plot(kernels, [float(row[\"psnr_db_mean\"]) for row in curve], \"o-\", label=label)\n                axes[1].plot(kernels, [float(row[\"ssim_mean\"]) for row in curve], \"o-\", label=label)\n                axes[2].scatter([float(row[\"runtime_ms\"]) for row in curve],\n                    [float(row[\"ssim_mean\"]) for row in curve], label=label)\n        for axis, xlabel, ylabel in zip(axes, [\"Denoise kernel\", \"Denoise kernel\", \"Runtime median (ms)\"],\n                [\"PSNR mean (dB)\", \"SSIM mean\", \"SSIM mean\"], strict=True):\n            axis.set(xlabel=xlabel, ylabel=ylabel)\n            axis.legend(fontsize=6)\n        note = \"Single setting: no sensitivity conclusion\" if len(config[\"denoise_kernels\"]) == 1 else \"Quality averaged over seeds; timing pooled median\"\n        sensitivity_members = [row for row in summary if row[\"noise_type\"] == noise_type\n            and float(row[\"noise_level\"]) == level and row[\"stage\"] == \"denoised\"]\n        save(fig, noise_type + \"_sensitivity\", contributing_cases(sensitivity_members), note)\n\n        gaussian = [row for row in summary if row[\"noise_type\"] == noise_type\n            and float(row[\"noise_level\"]) == level and row[\"stage\"] == \"denoised\" and row[\"method\"] == \"gaussian\"]\n        heat = np.array([[float(next(row for row in gaussian if int(row[\"denoise_kernel_size\"]) == kernel\n            and float(row[\"filter_sigma\"]) == sigma)[\"ssim_mean\"]) for sigma in config[\"gaussian_sigmas\"]]\n            for kernel in config[\"denoise_kernels\"]])\n        fig, axis = plt.subplots(figsize=(5, 4))\n        display = axis.imshow(heat, aspect=\"auto\")\n        axis.set_xticks(range(len(config[\"gaussian_sigmas\"])), config[\"gaussian_sigmas\"])\n        axis.set_yticks(range(len(config[\"denoise_kernels\"])), config[\"denoise_kernels\"])\n        axis.set(xlabel=\"Filter sigma\", ylabel=\"Denoise kernel\")\n        fig.colorbar(display, ax=axis, label=\"SSIM mean\")\n        save(fig, noise_type + \"_gaussian_heatmap\", contributing_cases(gaussian))\n\n        sharp_rows = [row for row in available if row[\"stage\"] == \"noisy_then_sharpened\"]\n        fig, axes = plt.subplots(1, len(sharp_rows)+1, figsize=(3*(len(sharp_rows)+1), 4), squeeze=False)\n        for axis, row in zip(axes[0], [noisy] + sharp_rows, strict=True):\n            axis.imshow(pixels(row), interpolation=\"nearest\")\n            axis.set_title(_label(row), fontsize=8)\n            axis.axis(\"off\")\n        save(fig, noise_type + \"_sharpening_direct\", [noisy] + sharp_rows, \"Direct sharpening is not denoising\")\n\n        fig, axes = plt.subplots(1, 2, figsize=(10, 4))\n        sharpening_members = []\n        for method in (\"mean\", \"gaussian\", \"median\"):\n            for laplacian_kernel in config[\"laplacian_kernels\"]:\n                curve = [row for row in summary if row[\"noise_type\"] == noise_type\n                    and float(row[\"noise_level\"]) == level and row[\"stage\"] == \"denoised_then_sharpened\"\n                    and row[\"method\"] == method\n                    and row[\"denoise_kernel_size\"] == next(group[1][\"denoise_kernel_size\"] for group in groups if group[1][\"method\"] == method)\n                    and row[\"filter_sigma\"] == next(group[1][\"filter_sigma\"] for group in groups if group[1][\"method\"] == method)\n                    and int(row[\"laplacian_kernel_size\"]) == laplacian_kernel]\n                curve.sort(key=lambda row: float(row[\"alpha\"]))\n                sharpening_members.extend(curve)\n                for axis, metric in zip(axes, (\"psnr_db_mean\", \"ssim_mean\"), strict=True):\n                    axis.plot([float(row[\"alpha\"]) for row in curve], [float(row[metric]) for row in curve],\n                        \"o-\", label=f\"{method}, L={laplacian_kernel}\")\n        for axis, ylabel in zip(axes, (\"PSNR mean (dB)\", \"SSIM mean\"), strict=True):\n            axis.set(xlabel=\"Sharpening alpha\", ylabel=ylabel)\n            axis.legend(fontsize=6)\n        save(fig, noise_type + \"_sharpening_sensitivity\", contributing_cases(sharpening_members),\n            \"Selected denoiser per method; fixed kernel/sigma across alpha\")\n\n        fig, axes = plt.subplots(1, 2, figsize=(10, 4))\n        noise_level_members = []\n        for method in (\"mean\", \"gaussian\", \"median\"):\n            curve = []\n            for noise_level in levels:\n                candidates = [row for row in summary if row[\"noise_type\"] == noise_type\n                    and float(row[\"noise_level\"]) == noise_level and row[\"method\"] == method]\n                best = choose_denoiser(candidates, method, config)\n                curve.append((noise_level, best))\n                noise_level_members.append(best)\n            for axis, metric in zip(axes, (\"psnr_db_mean\", \"ssim_mean\"), strict=True):\n                axis.plot([item[0] for item in curve], [float(item[1][metric]) for item in curve], \"o-\", label=method)\n        for axis, ylabel in zip(axes, (\"PSNR mean (dB)\", \"SSIM mean\"), strict=True):\n            axis.set(xlabel=\"Noise sigma\" if noise_type == \"gaussian\" else \"Impulse amount\", ylabel=ylabel)\n            axis.legend(fontsize=7)\n        save(fig, noise_type + \"_noise_levels\", contributing_cases(noise_level_members),\n            \"Fixed selected denoiser per level\")\n\n    payload = {\"run_id\": manifest[\"run_id\"], \"profile\": manifest[\"profile\"], \"roi_boxes\": roi_boxes,\n        \"figures\": records, \"source\": \"metrics.csv and summary.csv from this run\",\n        \"figure_code_sha256\": hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}\n    mapping_path = figure_dir / \"figures.json\"\n    mapping_path.write_text(json.dumps(payload, indent=2) + \"\\n\")\n    paths.append(mapping_path)\n    return paths\n\n\ndef main() -> None:\n    import argparse\n\n    parser = argparse.ArgumentParser(description=\"Part A: filtering and enhancement\")\n    parser.add_argument(\"--input\", type=Path, default=DEFAULT_INPUT)\n    parser.add_argument(\"--output\", type=Path, default=DEFAULT_OUTPUT)\n    parser.add_argument(\"--profile\", choices=(\"smoke\", \"full\"), default=\"full\")\n    args = parser.parse_args()\n    config = SMOKE_CONFIG if args.profile == \"smoke\" else DEFAULT_CONFIG\n    run_dir = run_experiments(args.input, args.output, config)\n    reference, _ = load_reference(args.input, config[\"max_long_edge\"])\n    build_figures(run_dir, resolve_rois(config[\"roi_boxes\"], reference.shape))\n    print(run_dir.resolve())\n\n\nif __name__ == \"__main__\":\n    main()\n",
+  "run_kind": "fresh_measurement",
+  "reference_sha256": "4d321bacf618cfba7b7922620d9ad7d8bb858de607af677b7a6a21647c7fd8d5"
+}
